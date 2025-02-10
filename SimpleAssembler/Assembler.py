@@ -1,0 +1,1 @@
+print("jazl dn soumil are gay")
