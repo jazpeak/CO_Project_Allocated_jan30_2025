@@ -169,4 +169,10 @@ def fileOutput (file_name):
         for ins in instructions:
             file.write(checkType(ins) + '\n')
 
-
+'''
+incorporate labels- using label values from dict when called in instruction as immediate
+debug n test all
+arul suck ass
+error and watever error
+soumil beauty shine
+'''
