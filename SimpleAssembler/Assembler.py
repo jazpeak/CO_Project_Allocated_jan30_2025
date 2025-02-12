@@ -157,7 +157,6 @@ def fileRead (file_name):
             s = re.split(pattern=r"[:,.() ]", string=line)
             checkLabel(s)
 
-def fileOutput  
     
 
 
