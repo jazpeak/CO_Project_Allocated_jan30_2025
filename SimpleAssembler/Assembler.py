@@ -75,9 +75,11 @@ funct3_I = {"addi":"000",
 
 funct3_S = {"sw":"010"}
 
+
 labels = {}
 instructions = []
 pc = 0
+
 
 def checkLabel(s):
     global pc
@@ -89,7 +91,6 @@ def checkLabel(s):
         pc += 4
 
     
-
 def fileRead (file_name):
     with open(file_name, 'r') as file:
         while True:
