@@ -79,15 +79,9 @@ funct3_S = {"sw":"010"}
 labels = {}
 
 
-import re
-
-
 st = "start:x1, x2,x3"
 
 print(re.split(pattern=r"[:,]", string=st))  #the thin
-
-#regex check
-
 
 
 def fileRead (file_name):
