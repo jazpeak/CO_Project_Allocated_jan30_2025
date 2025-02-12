@@ -75,18 +75,19 @@ funct3_I = {"addi":"000",
 
 funct3_S = {"sw":"010"}
 
+labels = {}
+instructions = []
+pc = 0
 
 def checkLabel(s):
-    labels = {}
-    instructions = []
-    pc = 0
+    global pc
     if s[0].endswith(":"):
                 label = s[0][:-1]
                 labels[label] = pc
     else:
-        pc += 4
         instructions.append(s)
-
+        pc += 4
+        
     return labels, instructions
     
 
