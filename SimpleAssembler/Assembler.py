@@ -70,3 +70,7 @@ funct3_I = {"addi":"000",
 funct3_S = {"sw":"010"}
 
 
+labels = {}
+
+
+    
