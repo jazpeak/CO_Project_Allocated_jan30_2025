@@ -125,6 +125,13 @@ def itype(ins):
     r= decToBinary(imm,12)+registers[rs]+registers[x[1]]+funct3_I[ins[0]]+registers[ins[1]]+opCodes[ins[0]]
     return r
 
+def stype(ins):
+    ins[2].rstrip(')')
+    x = ins[2].split('(')
+    imm = x[0]
+    final_imm = decToBinary(imm,12)
+    s = final_imm[11:5] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[4:0] + opCodes['sw']
+    return s
 
 def checkLabel(s):
     global pc
