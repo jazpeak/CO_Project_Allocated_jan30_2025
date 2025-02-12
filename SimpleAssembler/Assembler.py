@@ -89,22 +89,6 @@ def checkLabel(s):
     else:
         instructions.append(s)
         pc += 4
-
-
-def checkType(ins):
-    ins = instructions[0]
-    if instructions[0] in funct3_R:
-        return rtype(ins)
-    elif instructions[0] in funct3_I:
-        return itype(ins)
-    elif instructions[0] in funct3_S:
-        return stype(ins)
-    elif instructions[0] in funct3_B:
-        return btype(ins)
-    elif instructions[0] == "jal":
-        return jtype(ins)
-
-
 def rtype(ins):
     r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
     return r 
@@ -116,7 +100,7 @@ def fileRead (file_name):
             line = file.readline()
             if not line:
                 break
-            s = re.split(pattern=r"[:,. ]", string=line)
+            s = re.split(pattern=r"[:,.() ]", string=line)
             checkLabel(s)
     
 
