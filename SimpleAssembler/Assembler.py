@@ -87,8 +87,7 @@ def checkLabel(s):
     else:
         instructions.append(s)
         pc += 4
-        
-    return labels, instructions
+
     
 
 def fileRead (file_name):
