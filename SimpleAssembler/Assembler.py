@@ -155,20 +155,6 @@ def checkLabel(s):
         pc += 4
 
 
-def checkType(ins):
-    ins = instructions[0]
-    if ins in funct3_R:
-        return rtype(ins)
-    elif ins in funct3_I:
-        return itype(ins)
-    elif ins in funct3_S:
-        return stype(ins)
-    elif ins in funct3_B:
-        return btype(ins)
-    elif ins == "jal":
-        return jtype(ins)
-
-
 def fileRead (file_name):
     with open(file_name, 'r') as file:
         while True:
@@ -184,6 +170,5 @@ def fileOutput (file_name):
         for ins in instructions:
             file.write(checkType(ins) + '\n')
 
-print("arul")
 
 
