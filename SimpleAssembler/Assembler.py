@@ -71,7 +71,7 @@ funct3_B = {"beq":"000",
 
 funct3_I = {"addi":"000",
             "lw"  :"010",
-            "jalr":"000"}
+            "jal":"000"}
 
 
 funct3_S = {"sw":"010"}
@@ -109,9 +109,8 @@ def itype(ins):
     return r
 
 
-def rtype(ins):
-    r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
-    return r 
+def jtype(ins):
+
 
 
 def checkLabel(s):
@@ -136,6 +135,8 @@ def checkType(ins):
         return btype(ins)
     elif ins == "jal":
         return jtype(ins)
+    else:
+        raise ValueError(f"Unknown instruction: {ins[0]}")
 
 
 def fileRead (file_name):
