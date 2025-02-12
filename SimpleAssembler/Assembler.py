@@ -96,8 +96,6 @@ def checkType(ins):
         return jtype(ins)
     
      
-
-
 def checkLabel(s):
     global pc
     if s[0].endswith(":"):
