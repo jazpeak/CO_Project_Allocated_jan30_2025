@@ -99,6 +99,8 @@ def checkType(ins):
 def decToBinary(n,x):
     n=int(n)
     S=''
+    
+
     while n > 0:
         bit = n % 2
         S=str(bit)+S
@@ -132,27 +134,37 @@ def rtype(ins):
     r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
     return r 
 
-
 def btype(ins):
     x=decToBinary[ins[3],12]
     r=x[0]+x[2:8]+registers[ins[2]]+registers[ins[1]]+funct3_B[ins[0]]+ x[-4:]+x[1]+opCodes['B']
     return r
-
-
 def jtype(ins):
     x=decToBinary(ins[2],20)
     r=x[0]+x[-10:]+x[-11]+x[1:9]+registers[ins[1]]+opCodes['jal']
     return r
-
 
 def checkLabel(s):
     global pc
     if s[0].endswith(":"):
                 label = s[0][:-1]
                 labels[label] = pc
+                instructions.append(s[1:])
     else:
         instructions.append(s)
         pc += 4
+
+
+def checkType(ins):
+    if ins in funct3_R:
+        return rtype(ins)
+    elif ins in funct3_I:
+        return itype(ins)
+    elif ins in funct3_S:
+        return stype(ins)
+    elif ins in funct3_B:
+        return btype(ins)
+    elif ins == "jal":
+        return jtype(ins)
 
 
 def fileRead (file_name):
@@ -161,7 +173,7 @@ def fileRead (file_name):
             line = file.readline()
             if not line:
                 break
-            s = re.split(pattern=r"[:,. ]", string=line)
+            s = re.split(pattern=r"[:,.() ]", string=line)
             checkLabel(s)
 
 
@@ -169,6 +181,5 @@ def fileOutput (file_name):
     with open(file_name, 'w') as file:
         for ins in instructions:
             file.write(checkType(ins) + '\n')
-
 
 
