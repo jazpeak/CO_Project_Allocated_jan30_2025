@@ -90,14 +90,12 @@ def checkLabel(s):
         instructions.append(s)
         pc += 4
 
-<<<<<<< HEAD
+
 def rtype(ins):
     r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
     return r 
 
-=======
-    
->>>>>>> 8fb5822ec29d4ce098acd62cbf094f3ca5962bb1
+
 def fileRead (file_name):
     with open(file_name, 'r') as file:
         while True:
