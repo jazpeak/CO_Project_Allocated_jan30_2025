@@ -88,7 +88,9 @@ def checkLabel(s):
         instructions.append(s)
         pc += 4
 
-    
+def rtype(ins):
+    r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
+    return r 
 
 def fileRead (file_name):
     with open(file_name, 'r') as file:
