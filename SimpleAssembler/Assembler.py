@@ -175,7 +175,7 @@ def fileRead (file_name):
             line = file.readline()
             if not line:
                 break
-            s = re.split(pattern=r"[:,.() ]", string=line)
+            s = re.split(pattern=r"[:,. ]", string=line)
             checkLabel(s)
 
 
