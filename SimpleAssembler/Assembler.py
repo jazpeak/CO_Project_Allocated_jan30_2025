@@ -76,14 +76,6 @@ funct3_I = {"addi":"000",
 funct3_S = {"sw":"010"}
 
 
-labels = {}
-
-
-st = "start:x1, x2,x3"
-
-print(re.split(pattern=r"[:,]", string=st))  #the thin
-
-
 def fileRead (file_name):
     with open(file_name, 'r') as file:
         while True:
