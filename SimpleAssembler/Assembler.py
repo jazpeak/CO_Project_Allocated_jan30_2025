@@ -72,3 +72,13 @@ labels = {}
 
 
 
+
+
+import re
+
+
+st = "start:x1, x2,x3"
+
+print(re.split(pattern=r"[:,]", string=st))
+
+#regex check
