@@ -111,11 +111,6 @@ def decToBinary(n,x):
     return S
 
 
-def rtype(ins):
-    r=funct7_R[ins[0]] + registers[ins[3]] + registers[ins[2]] + funct3_R[ins[0]]+ registers[ins[1]]+opCodes['R']
-    return r 
-
-
 def itype(ins):
     if len(ins)==3:
         ins[2].rstrip(')')
@@ -125,6 +120,7 @@ def itype(ins):
     r= decToBinary(imm,12)+registers[rs]+registers[x[1]]+funct3_I[ins[0]]+registers[ins[1]]+opCodes[ins[0]]
     return r
 
+
 def stype(ins):
     ins[2].rstrip(')')
     x = ins[2].split('(')
@@ -132,6 +128,7 @@ def stype(ins):
     final_imm = decToBinary(imm,12)
     s = final_imm[11:4:-1] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[4::-1] + opCodes['sw']
     return s
+
 
 def rtype(ins):
     r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
@@ -178,6 +175,12 @@ def fileRead (file_name):
                 break
             s = re.split(pattern=r"[:,.() ]", string=line)
             checkLabel(s)
+
+
+def fileOutput (file_name):
+    with open(file_name, 'w') as file:
+        for ins in instructions:
+            file.write(checkType(ins) + '\n')
 
     
 
