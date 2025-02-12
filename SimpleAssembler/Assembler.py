@@ -184,7 +184,6 @@ def fileOutput (file_name):
         for ins in instructions:
             file.write(checkType(ins) + '\n')
 
-    
-
+print("arul")
 
 
