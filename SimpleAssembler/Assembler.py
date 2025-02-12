@@ -98,8 +98,6 @@ def checkType(ins):
 def decToBinary(n,x):
     n=int(n)
     S=''
-    
-
     while n > 0:
         bit = n % 2
         S=str(bit)+S
@@ -133,10 +131,13 @@ def rtype(ins):
     r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
     return r 
 
+
 def btype(ins):
     x=decToBinary[ins[3],12]
     r=x[0]+x[2:8]+registers[ins[2]]+registers[ins[1]]+funct3_B[ins[0]]+ x[-4:]+x[1]+opCodes['B']
     return r
+
+
 def jtype(ins):
     x=decToBinary(ins[2],20)
     r=x[0]+x[-10:]+x[-11]+x[1:9]+registers[ins[1]]+opCodes['jal']
