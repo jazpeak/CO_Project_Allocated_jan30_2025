@@ -92,7 +92,8 @@ print(re.split(pattern=r"[:,]", string=st))  #the thin
 
 def fileRead (file_name):
     with open(file_name, 'r') as file:
-        all = file.readlines()
-        for line in all:   
+        while True:
+            line = file.readline()
+            if not line:
+                break
             s = re.split(pattern=r"[:,. ]", string=line)
-            #below this we will call function to check what type of instruction andd etc...
