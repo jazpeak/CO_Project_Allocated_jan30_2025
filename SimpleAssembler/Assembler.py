@@ -14,38 +14,38 @@ opCodes = { "R"   : "0110011",
 
 
 registers = {"zero" : "00000",
-             "ra" : "00001",    
-             "sp" : "00010",
-             "gp" : "00011",
-             "tp" : "00100",
-             "t0" : "00101",
-             "t1" : "00110",
-             "t2" : "00111",
-             "s0" : "01000",
-             "fp" : "01000",
-             "s1" : "01001",
-             "a0": "01010",
-             "a1": "01011",
-             "a2": "01100",
-             "a3": "01101",
-             "a4": "01110",
-             "a5": "01111",
-             "a6": "10000",
-             "a7": "10001",
-             "s2": "10010",
-             "s3": "10011",
-             "s4": "10100",
-             "s5": "10101",
-             "s6": "10110",
-             "s7": "10111",
-             "s8": "11000",
-             "s9": "11001",
-             "s10": "11010",
-             "s11": "11011",
-             "t3": "11100",
-             "t4": "11101",
-             "t5": "11110",
-             "t6": "11111"}
+             "ra"   : "00001",    
+             "sp"   : "00010",
+             "gp"   : "00011",
+             "tp"   : "00100",
+             "t0"   : "00101",
+             "t1"   : "00110",
+             "t2"   : "00111",
+             "s0"   : "01000",
+             "fp"   : "01000",
+             "s1"   : "01001",
+             "a0"   : "01010",
+             "a1"   : "01011",
+             "a2"   : "01100",
+             "a3"   : "01101",
+             "a4"   : "01110",
+             "a5"   : "01111",
+             "a6"   : "10000",
+             "a7"   : "10001",
+             "s2"   : "10010",
+             "s3"   : "10011",
+             "s4"   : "10100",
+             "s5"   : "10101",
+             "s6"   : "10110",
+             "s7"   : "10111",
+             "s8"   : "11000",
+             "s9"   : "11001",
+             "s10"  : "11010",
+             "s11"  : "11011",
+             "t3"   : "11100",
+             "t4"   : "11101",
+             "t5"   : "11110",
+             "t6"   : "11111"}
 
 
 funct3_R = {"add":"000",
@@ -71,7 +71,7 @@ funct3_B = {"beq":"000",
 
 funct3_I = {"addi":"000",
             "lw"  :"010",
-            "jalr":"000"}
+            "jal":"000"}
 
 
 funct3_S = {"sw":"010"}
@@ -133,6 +133,11 @@ def stype(ins):
     s = final_imm[11:4:-1] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[4::-1] + opCodes['sw']
     return s
 
+def rtype(ins):
+    r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
+    return r 
+
+
 def checkLabel(s):
     global pc
     if s[0].endswith(":"):
@@ -143,9 +148,18 @@ def checkLabel(s):
         pc += 4
 
 
-def rtype(ins):
-    r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
-    return r 
+def checkType(ins):
+    ins = instructions[0]
+    if ins in funct3_R:
+        return rtype(ins)
+    elif ins in funct3_I:
+        return itype(ins)
+    elif ins in funct3_S:
+        return stype(ins)
+    elif ins in funct3_B:
+        return btype(ins)
+    elif ins == "jal":
+        return jtype(ins)
 
 
 def fileRead (file_name):
@@ -156,6 +170,7 @@ def fileRead (file_name):
                 break
             s = re.split(pattern=r"[:,.() ]", string=line)
             checkLabel(s)
+
     
 
 
