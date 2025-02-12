@@ -83,7 +83,6 @@ pc = 0
 
 
 def checkType(ins):
-    ins = instructions[0]
     if ins in funct3_R:
         return rtype(ins)
     elif ins in funct3_I:
