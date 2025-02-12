@@ -76,24 +76,29 @@ funct3_I = {"addi":"000",
 funct3_S = {"sw":"010"}
 
 
-def fileRead (file_name):
+def checkLabel(s):
     labels = {}
     instructions = []
     pc = 0
+    if s[0].endswith(":"):
+                label = s[0][:-1]
+                labels[label] = pc
+    else:
+        pc += 4
+        instructions.append(s)
+
+    return labels, instructions
+    
+
+def fileRead (file_name):
     with open(file_name, 'r') as file:
         while True:
             line = file.readline()
             if not line:
                 break
             s = re.split(pattern=r"[:,. ]", string=line)
-            if s[0].endswith(":"):
-                label = s[0][:-1]
-                labels[label] = pc
-            else:
-                pc += 4
-                instructions.append(s)
-
-    return labels, instructions
+            checkLabel(s)
+    
 
 
 
