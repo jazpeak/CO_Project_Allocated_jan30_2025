@@ -95,7 +95,37 @@ def checkType(ins):
     elif ins == "jal":
         return jtype(ins)
     
-     
+
+def decToBinary(n,x):
+    n=int(n)
+    S=''
+    
+
+    while n > 0:
+        bit = n % 2
+        S=str(bit)+S
+        n //= 2
+    y=S[0]
+    while len(S)<x:
+        S=y+S
+    return S
+
+
+def rtype(ins):
+    r=funct7_R[ins[0]] + registers[ins[3]] + registers[ins[2]] + funct3_R[ins[0]]+ registers[ins[1]]+opCodes['R']
+    return r 
+
+
+def itype(ins):
+    if len(ins)==3:
+        ins[2].rstrip(')')
+        x=ins[2].split('(')
+        imm=x[0]
+        rs=x[1]
+    r= decToBinary(imm,12)+registers[rs]+registers[x[1]]+funct3_I[ins[0]]+registers[ins[1]]+opCodes[ins[0]]
+    return r
+
+
 def checkLabel(s):
     global pc
     if s[0].endswith(":"):
