@@ -81,9 +81,26 @@ labels = {}
 instructions = []
 pc = 0
 
+
+def checkType(ins):
+    ins = instructions[0]
+    if ins in funct3_R:
+        return rtype(ins)
+    elif ins in funct3_I:
+        return itype(ins)
+    elif ins in funct3_S:
+        return stype(ins)
+    elif ins in funct3_B:
+        return btype(ins)
+    elif ins == "jal":
+        return jtype(ins)
+    
+
 def decToBinary(n,x):
     n=int(n)
     S=''
+    
+
     while n > 0:
         bit = n % 2
         S=str(bit)+S
@@ -113,13 +130,8 @@ def stype(ins):
     x = ins[2].split('(')
     imm = x[0]
     final_imm = decToBinary(imm,12)
-    s = final_imm[11:5] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[4:0] + opCodes['sw']
+    s = final_imm[11:4:-1] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[4::-1] + opCodes['sw']
     return s
-
-def rtype(ins):
-    r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
-    return r 
-
 
 def checkLabel(s):
     global pc
@@ -131,18 +143,9 @@ def checkLabel(s):
         pc += 4
 
 
-def checkType(ins):
-    ins = instructions[0]
-    if ins in funct3_R:
-        return rtype(ins)
-    elif ins in funct3_I:
-        return itype(ins)
-    elif ins in funct3_S:
-        return stype(ins)
-    elif ins in funct3_B:
-        return btype(ins)
-    elif ins == "jal":
-        return jtype(ins)
+def rtype(ins):
+    r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
+    return r 
 
 
 def fileRead (file_name):
