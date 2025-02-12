@@ -1,3 +1,7 @@
+import re
+from re import split
+
+
 opCodes = { "R"   : "0110011",
             "lw"  : "0000011",
             "addi": "0010011",
@@ -48,12 +52,14 @@ funct3_R = {"add":"000",
             "srl":"101",
             "slt":"010"}
 
+
 funct7_R = {"add":"0000000",
             "sub":"0100000",
             "and":"0000000",
             "or" :"0000000",
             "srl":"0000000",
             "slt":"0000000"}
+
 
 funct3_B = {"beq":"000",
             "bne":"001",
@@ -71,4 +77,4 @@ funct3_S = {"sw":"010"}
 labels = {}
 
 
-
+def fileRead (): 
