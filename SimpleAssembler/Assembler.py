@@ -154,26 +154,13 @@ def checkLabel(s):
         pc += 4
 
 
-def checkType(ins):
-    if ins in funct3_R:
-        return rtype(ins)
-    elif ins in funct3_I:
-        return itype(ins)
-    elif ins in funct3_S:
-        return stype(ins)
-    elif ins in funct3_B:
-        return btype(ins)
-    elif ins == "jal":
-        return jtype(ins)
-
-
 def fileRead (file_name):
     with open(file_name, 'r') as file:
         while True:
             line = file.readline()
             if not line:
                 break
-            s = re.split(pattern=r"[:,.() ]", string=line)
+            s = re.split(pattern=r"[:,. ]", string=line)
             checkLabel(s)
 
 
