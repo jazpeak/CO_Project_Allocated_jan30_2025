@@ -71,7 +71,7 @@ funct3_B = {"beq":"000",
 
 funct3_I = {"addi":"000",
             "lw"  :"010",
-            "jal":"000"}
+            "jalr":"000"}
 
 
 funct3_S = {"sw":"010"}
@@ -93,6 +93,7 @@ def checkType(ins):
         return btype(ins)
     elif ins[0] == "jal":
         return jtype(ins)
+    #print('step')
     
 
 def decToBinary(n, x):
@@ -144,7 +145,7 @@ def stype(ins):
     x = ins[2].split('(')
     imm = x[0]
     final_imm = decToBinary(imm,12)
-    s = final_imm[11:4:-1] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[4::-1] + opCodes['sw']
+    s = final_imm[:7] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[7:] + opCodes['sw']
     return s
 
 
@@ -156,11 +157,11 @@ def rtype(ins):
 def btype(ins):
     y=ins[3]
     if y in labels:
-        i=abs(labels[y]-pc)
+        i=labels[y]-pc
     else:
         i=y
 
-    x=decToBinary(i,12)
+    x=decToBinary(str(i),12)
     r=x[0]+x[2:8]+registers[ins[2]]+registers[ins[1]]+funct3_B[ins[0]]+ x[-4:]+x[1]+opCodes['B']
     return r
 
@@ -168,11 +169,11 @@ def btype(ins):
 def jtype(ins):
     y=ins[2]
     if y in labels:
-        i=abs(labels[y]-pc)
+        i=labels[y]-pc
     else:
         i=y
 
-    x=decToBinary(i,20)
+    x=decToBinary(str(i),20)
     r=x[0]+x[-10:]+x[-11]+x[1:9]+registers[ins[1]]+opCodes['jal']
     return r
 
@@ -182,7 +183,9 @@ def checkLabel(s):
                 label = s[0][:-1]
                 labels[label] = pc
                 s=s[1:]
+                
                 #instructions.append(s[1:])  #suckitup  #kalkisuraj #mbsurajheart # jainsforever # khareyatn
+    #print(s)
     if s:
         instructions.append(s)
         pc+=4
