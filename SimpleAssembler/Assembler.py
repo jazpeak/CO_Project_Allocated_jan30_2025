@@ -135,13 +135,25 @@ def rtype(ins):
 
 
 def btype(ins):
-    x=decToBinary(ins[3],12)
+    y=ins[3]
+    if y in labels:
+        i=abs(labels[y]-pc)
+    else:
+        i=y
+
+    x=decToBinary(i,12)
     r=x[0]+x[2:8]+registers[ins[2]]+registers[ins[1]]+funct3_B[ins[0]]+ x[-4:]+x[1]+opCodes['B']
     return r
 
 
 def jtype(ins):
-    x=decToBinary(ins[2],20)
+    y=ins[2]
+    if y in labels:
+        i=abs(labels[y]-pc)
+    else:
+        i=y
+
+    x=decToBinary(i,20)
     r=x[0]+x[-10:]+x[-11]+x[1:9]+registers[ins[1]]+opCodes['jal']
     return r
 
@@ -150,10 +162,11 @@ def checkLabel(s):
     if s[0].endswith(":"):
                 label = s[0][:-1]
                 labels[label] = pc
-                instructions.append(s[1:])  #suckitup  #kalkisuraj #mbsurajheart # jainsforever # khareyatn
-    else:
+                s=s[1:]
+                #instructions.append(s[1:])  #suckitup  #kalkisuraj #mbsurajheart # jainsforever # khareyatn
+    if s:
         instructions.append(s)
-        pc += 4
+        pc+=4
 
 
 def fileRead (file_name):
