@@ -90,10 +90,12 @@ def checkType(ins):
     elif ins[0] in funct3_S:
         return stype(ins)
     elif ins[0] in funct3_B:
+        print('Babes')
         return btype(ins)
     elif ins[0] == "jal":
         return jtype(ins)
     print('step')
+    #return ""
     
 def dectobin(n,x):
     pass
