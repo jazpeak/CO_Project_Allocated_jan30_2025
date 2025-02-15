@@ -125,6 +125,7 @@ def decToBinary(n, x):
             S=S[3:]
         else:
             S=S[2:]
+        S='0'*(f-len(S))+S
             #print(S)
 
     y = '0' if d==0 else '1'
