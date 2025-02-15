@@ -114,7 +114,10 @@ def itype(ins):
         x=ins[2].split('(')
         imm=x[0]
         rs=x[1]
-    r= decToBinary(imm,12)+registers[rs]+registers[x[1]]+funct3_I[ins[0]]+registers[ins[1]]+opCodes[ins[0]]
+    if len(ins)==4:
+        imm=ins[3].strip()
+        rs=ins[2].strip()
+    r= decToBinary(imm,12)+registers[rs]+funct3_I[ins[0]]+registers[ins[1]]+opCodes[ins[0]]
     return r
 
 
@@ -128,12 +131,12 @@ def stype(ins):
 
 
 def rtype(ins):
-    r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
+    r=funct7_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
     return r 
 
 
 def btype(ins):
-    x=decToBinary[ins[3],12]
+    x=decToBinary(ins[3],12)
     r=x[0]+x[2:8]+registers[ins[2]]+registers[ins[1]]+funct3_B[ins[0]]+ x[-4:]+x[1]+opCodes['B']
     return r
 
