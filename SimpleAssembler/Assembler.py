@@ -93,7 +93,7 @@ def checkType(ins):
         return btype(ins)
     elif ins[0] == "jal":
         return jtype(ins)
-    #print('step')
+    print('step')
     
 def dectobin(n,x):
     pass
@@ -160,7 +160,8 @@ def rtype(ins):
 def btype(ins):
     y=ins[3]
     if y in labels:
-        i=labels[y]-pc
+        i=(labels[y]-pc)//4
+        #print(i)
     else:
         i=y
 
@@ -172,7 +173,7 @@ def btype(ins):
 def jtype(ins):
     y=ins[2]
     if y in labels:
-        i=labels[y]-pc
+        i=(labels[y]-pc)//4
     else:
         i=y
 
