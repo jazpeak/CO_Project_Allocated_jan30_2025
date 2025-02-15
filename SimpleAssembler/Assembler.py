@@ -83,15 +83,15 @@ pc = 0
 
 
 def checkType(ins):
-    if ins in funct3_R:
+    if ins[0] in funct3_R:
         return rtype(ins)
-    elif ins in funct3_I:
+    elif ins[0] in funct3_I:
         return itype(ins)
-    elif ins in funct3_S:
+    elif ins[0] in funct3_S:
         return stype(ins)
-    elif ins in funct3_B:
+    elif ins[0] in funct3_B:
         return btype(ins)
-    elif ins == "jal":
+    elif ins[0] == "jal":
         return jtype(ins)
     
 
@@ -169,8 +169,8 @@ def fileOutput (file_name):
             file.write(checkType(ins) + '\n')
 
 
-filename = "c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
-output = "c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
+filename = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
+output = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
 
 fileRead(filename)
 fileOutput(output)
