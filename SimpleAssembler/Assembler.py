@@ -131,7 +131,7 @@ def stype(ins):
 
 
 def rtype(ins):
-    r=funct7_R[ins[0]] + registers[ins[3]] + registers[ins[2]] + funct3_R[ins[0]] + registers[ins[1]] + opCodes['R']
+    r=funct3_R[ins[0]] + registers[ins[1]] + registers[ins[2]] + funct3_R[ins[3]] + registers[ins[4]] + opCodes['R']
     return r 
 
 
