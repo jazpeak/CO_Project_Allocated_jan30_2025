@@ -95,7 +95,8 @@ def checkType(ins):
         return jtype(ins)
     #print('step')
     
-
+def dectobin(n,x):
+    pass
 def decToBinary(n, x):
     d=0
     if n[0]=='-':
@@ -116,11 +117,13 @@ def decToBinary(n, x):
         S=S.replace('0','1')
         S=S.replace('2','0')
         f=len(S)
-        S=int(S)
-        S+=1
+        S=bin(int(S,2)+1)
         S=str(S)
-        if len(S)>f:
-            S=S[1:]
+        if len(S)>f+2:
+            S=S[3:]
+        else:
+            S=S[2:]
+            #print(S)
 
     y = '0' if d==0 else '1'
     while len(S) < x:
