@@ -163,14 +163,10 @@ def fileRead (file_name):
             s = re.split(pattern=r"[,. ]", string=line)
             checkLabel(s)
 
-filename="Ex_test_2.txt"
-output="madhu.txt"
 def fileOutput (file_name):
     with open(file_name, 'w') as file:
         for ins in instructions:
             file.write(checkType(ins) + '\n')
-fileRead("Ex_test_2.txt")
-fileOutput(output)
 
 
 filename = "c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
