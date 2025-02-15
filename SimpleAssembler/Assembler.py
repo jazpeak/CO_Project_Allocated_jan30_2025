@@ -102,7 +102,7 @@ def decToBinary(n, x):
         bit = n % 2
         S = str(bit) + S
         n //= 2
-    y = S[0]
+    y = S[0] if S else '0'
     while len(S) < x:
         S = y + S
     return S
