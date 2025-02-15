@@ -133,7 +133,7 @@ def rtype(ins):
 
 
 def btype(ins):
-    x=decToBinary[ins[3],12]
+    x=decToBinary(ins[3],12)
     r=x[0]+x[2:8]+registers[ins[2]]+registers[ins[1]]+funct3_B[ins[0]]+ x[-4:]+x[1]+opCodes['B']
     return r
 
