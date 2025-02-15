@@ -120,7 +120,6 @@ def itype(ins):
     r= decToBinary(imm,12)+registers[rs]+funct3_I[ins[0]]+registers[ins[1]]+opCodes[ins[0]]
     return r
 
-
 def stype(ins):
     ins[2] = ins[2].rstrip(')')
     x = ins[2].split('(')
