@@ -96,13 +96,32 @@ def checkType(ins):
     
 
 def decToBinary(n, x):
-    n = int(n)
+    d=0
+    if n[0]=='-':
+        d=1
+        n=int(n[1:])
+    else:
+        n = int(n)
+
     S = ''
+    if n==0:
+        S='0'
     while n > 0:
         bit = n % 2
         S = str(bit) + S
         n //= 2
-    y = S[0] if S else '0'
+    if d==1:
+        S=S.replace('1','2')
+        S=S.replace('0','1')
+        S=S.replace('2','0')
+        f=len(S)
+        S=int(S)
+        S+=1
+        S=str(S)
+        if len(S)>f:
+            S=S[1:]
+
+    y = '0' if d==0 else '1'
     while len(S) < x:
         S = y + S
     return S
@@ -184,8 +203,8 @@ def fileOutput (file_name):
             file.write(checkType(ins) + '\n')
 
 
-filename = "/c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
-output = "/c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
+filename = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
+output = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
 
 fileRead(filename)
 fileOutput(output)
