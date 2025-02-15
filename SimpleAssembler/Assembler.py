@@ -169,6 +169,14 @@ def fileOutput (file_name):
         for ins in instructions:
             file.write(checkType(ins) + '\n')
 
+
+filename = "c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
+output = "c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
+
+fileRead(filename)
+fileOutput(output)
+
+
 '''
 incorporate labels- using label values from dict when called in instruction as immediate
 debug n test all
