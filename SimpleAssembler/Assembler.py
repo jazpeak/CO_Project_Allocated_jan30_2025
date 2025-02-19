@@ -162,7 +162,6 @@ def btype(ins):
     x=decToBinary(str(i),12)
     x=x[:-1]
     x=x[0]+x
-    #print(x)
     r=x[0]+x[2:8]+registers[ins[2]]+registers[ins[1]]+funct3_B[ins[0]]+ x[-4:]+x[1]+opCodes['B']
     return r
 
