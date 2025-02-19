@@ -93,6 +93,7 @@ def checkType(ins):
         return btype(ins)
     elif ins[0] == "jal":
         return jtype(ins)
+    
     else:
         raise SyntaxError("Wrong instruction type at line " + str(pc//4 + 1))
     
@@ -197,13 +198,13 @@ def jtype(ins):
     return r
 
 
-def checkLabel(s,label=0):
+def checkLabel(s, label=0):
     global pc
-    if label!=0:
+    if label != 0:
         labels[label] = pc
-    if s:
+    if s and not (len(s) == 1 and s[0] == ''):
         instructions.append(s)
-        pc+=4
+        pc += 4
 
 
 def fileRead (file_name):
