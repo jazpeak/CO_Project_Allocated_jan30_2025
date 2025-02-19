@@ -163,15 +163,15 @@ def btype(ins):
     y=ins[3].strip()
     if y in labels:
         i=(labels[y]-pc)
-        print(pc)
-        print(i)
+        #print(pc)
+        #print(i)
     else:
         i=y
-    print(str(i))
+    #print(str(i))
     x=decToBinary(str(i),12)
     x=x[:-1]
     x=x[0]+x
-    print(x)
+    #print(x)
     r=x[0]+x[2:8]+registers[ins[2]]+registers[ins[1]]+funct3_B[ins[0]]+ x[-4:]+x[1]+opCodes['B']
     return r
 
@@ -180,8 +180,8 @@ def jtype(ins):
     y=ins[2].strip()
     if y in labels:
         i=labels[y]-pc
-        print(pc)
-        print(i)
+        #print(pc)
+        #print(i)
     else:
         i=y
 
@@ -215,7 +215,7 @@ def fileRead (file_name):
             else:
                 s[0]=s[0].strip()
                 s=re.split(pattern=r"[,. ]", string=s[0])
-            print(s,label)
+            #print(s,label)
             checkLabel(s,label)
 
 def fileOutput (file_name):
@@ -231,7 +231,7 @@ filename = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/S
 output = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
 
 fileRead(filename)
-print(labels)
+#print(labels)
 fileOutput(output)
 
 
