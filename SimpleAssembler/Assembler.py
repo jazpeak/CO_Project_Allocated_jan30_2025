@@ -90,11 +90,11 @@ def checkType(ins):
     elif ins[0] in funct3_S:
         return stype(ins)
     elif ins[0] in funct3_B:
-        print('Babes')
+        #print('Babes')
         return btype(ins)
     elif ins[0] == "jal":
         return jtype(ins)
-    print('step')
+    #print('step')
     #return ""
     
 def dectobin(n,x):
@@ -136,7 +136,7 @@ def decToBinary(n, x):
 
 def itype(ins):
     if len(ins)==3:
-        ins[2].rstrip(')')
+        ins[2]=ins[2].rstrip(')')
         x=ins[2].split('(')
         imm=x[0]
         rs=x[1]
@@ -154,33 +154,40 @@ def stype(ins):
     s = final_imm[:7] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[7:] + opCodes['sw']
     return s
 
-
 def rtype(ins):
     r=funct7_R[ins[0]] + registers[ins[3]] + registers[ins[2]] + funct3_R[ins[0]] + registers[ins[1]] + opCodes['R']
     return r 
 
 
 def btype(ins):
-    y=ins[3]
+    y=ins[3].strip()
     if y in labels:
-        i=(labels[y]-pc)//4
-        #print(i)
+        i=(labels[y]-pc)
+        print(pc)
+        print(i)
     else:
         i=y
-
+    print(str(i))
     x=decToBinary(str(i),12)
+    x=x[:-1]
+    x=x[0]+x
+    print(x)
     r=x[0]+x[2:8]+registers[ins[2]]+registers[ins[1]]+funct3_B[ins[0]]+ x[-4:]+x[1]+opCodes['B']
     return r
 
 
 def jtype(ins):
-    y=ins[2]
+    y=ins[2].strip()
     if y in labels:
-        i=(labels[y]-pc)//4
+        i=labels[y]-pc
+        print(pc)
+        print(i)
     else:
         i=y
 
     x=decToBinary(str(i),20)
+    x=x[:-1]
+    x=x[0]+x
     r=x[0]+x[-10:]+x[-11]+x[1:9]+registers[ins[1]]+opCodes['jal']
     return r
 
@@ -195,7 +202,7 @@ def checkLabel(s):
     #print(s)
     if s:
         instructions.append(s)
-        pc+=4
+        pc+=1
 
 
 def fileRead (file_name):
@@ -208,15 +215,19 @@ def fileRead (file_name):
             checkLabel(s)
 
 def fileOutput (file_name):
+    global pc
+    pc=0
     with open(file_name, 'w') as file:
         for ins in instructions:
             file.write(checkType(ins) + '\n')
+            pc+=1
 
 
 filename = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
 output = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
 
 fileRead(filename)
+print(labels)
 fileOutput(output)
 
 
