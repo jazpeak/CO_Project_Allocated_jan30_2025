@@ -233,12 +233,3 @@ output = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/Sim
 fileRead(filename)
 #print(labels)
 fileOutput(output)
-
-
-'''
-incorporate labels- using label values from dict when called in instruction as immediate
-debug n test all
-arul suck ass
-error and watever error
-soumil beauty shine
-'''
