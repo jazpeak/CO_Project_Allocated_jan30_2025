@@ -90,12 +90,9 @@ def checkType(ins):
     elif ins[0] in funct3_S:
         return stype(ins)
     elif ins[0] in funct3_B:
-        #print('Babes')
         return btype(ins)
     elif ins[0] == "jal":
         return jtype(ins)
-    #print('step')
-    #return ""
     
 def dectobin(n,x):
     pass
@@ -106,7 +103,6 @@ def decToBinary(n, x):
         n=int(n[1:])
     else:
         n = int(n)
-
     S = ''
     if n==0:
         S='0'
@@ -126,8 +122,6 @@ def decToBinary(n, x):
         else:
             S=S[2:]
         S='0'*(f-len(S))+S
-            #print(S)
-
     y = '0' if d==0 else '1'
     while len(S) < x:
         S = y + S
@@ -163,15 +157,11 @@ def btype(ins):
     y=ins[3].strip()
     if y in labels:
         i=(labels[y]-pc)
-        #print(pc)
-        #print(i)
     else:
         i=y
-    #print(str(i))
     x=decToBinary(str(i),12)
     x=x[:-1]
     x=x[0]+x
-    #print(x)
     r=x[0]+x[2:8]+registers[ins[2]]+registers[ins[1]]+funct3_B[ins[0]]+ x[-4:]+x[1]+opCodes['B']
     return r
 
@@ -180,11 +170,8 @@ def jtype(ins):
     y=ins[2].strip()
     if y in labels:
         i=labels[y]-pc
-        #print(pc)
-        #print(i)
     else:
         i=y
-
     x=decToBinary(str(i),20)
     x=x[:-1]
     x=x[0]+x
@@ -215,7 +202,6 @@ def fileRead (file_name):
             else:
                 s[0]=s[0].strip()
                 s=re.split(pattern=r"[,. ]", string=s[0])
-            #print(s,label)
             checkLabel(s,label)
 
 def fileOutput (file_name):
@@ -227,18 +213,8 @@ def fileOutput (file_name):
             pc+=4
 
 
-filename = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
-output = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
+filename = "c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
+output = "c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
 
 fileRead(filename)
-#print(labels)
 fileOutput(output)
-
-
-'''
-incorporate labels- using label values from dict when called in instruction as immediate
-debug n test all
-arul suck ass
-error and watever error
-soumil beauty shine
-'''
