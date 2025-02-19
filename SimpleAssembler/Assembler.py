@@ -96,8 +96,7 @@ def checkType(ins):
     else:
         raise SyntaxError("Wrong instruction type at line " + str(pc//4 + 1))
     
-def dectobin(n,x):
-    pass
+
 def decToBinary(n, x):
     d=0
     if n[0]=='-':
@@ -148,6 +147,7 @@ def itype(ins):
 
     return r
 
+
 def stype(ins):
     ins[2] = ins[2].rstrip(')')
     x = ins[2].split('(')
@@ -158,6 +158,7 @@ def stype(ins):
         final_imm = decToBinary(imm,12)
         s = final_imm[:7] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[7:] + opCodes['sw']
     return s
+
 
 def rtype(ins):
     if ins[3] not in registers or ins[2] not in registers or ins[1] not in registers:
@@ -195,6 +196,7 @@ def jtype(ins):
     r=x[0]+x[-10:]+x[-11]+x[1:9]+registers[ins[1]]+opCodes['jal']
     return r
 
+
 def checkLabel(s,label=0):
     global pc
     if label!=0:
@@ -220,6 +222,7 @@ def fileRead (file_name):
                 s[0]=s[0].strip()
                 s=re.split(pattern=r"[,. ]", string=s[0])
             checkLabel(s,label)
+
 
 def fileOutput (Output):
     if instructions[-1] != ["beq", "zero", "zero", "0"]:
