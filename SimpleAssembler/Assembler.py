@@ -93,6 +93,8 @@ def checkType(ins):
         return btype(ins)
     elif ins[0] == "jal":
         return jtype(ins)
+    else:
+        raise SyntaxError("Wrong instruction type at line " + str(pc//4 + 1))
     
 def dectobin(n,x):
     pass
@@ -205,6 +207,8 @@ def fileRead (file_name):
             checkLabel(s,label)
 
 def fileOutput (file_name):
+    if instructions[-1] != ["beq", "zero", "zero", "0"]:
+        raise SyntaxError("Missing virtual halt instruction at the end")
     global pc
     pc=0
     with open(file_name, 'w') as file:
