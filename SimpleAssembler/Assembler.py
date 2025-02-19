@@ -139,11 +139,15 @@ def itype(ins):
         rs=x[1]
         if ins[1] not in registers or rs not in registers:
             raise SyntaxError("Wrong register name at line " + str(pc//4 + 1))
+        if (not imm.isnumeric()) or (int(imm)>2047 or int(imm)<-2048):
+            raise SyntaxError("Immediate value out of range at line " + str(pc//4 + 1))
     if len(ins)==4:
         imm=ins[3].strip()
         rs=ins[2].strip()
         if ins[1] not in registers or rs not in registers:
             raise SyntaxError("Wrong register name at line " + str(pc//4 + 1))
+        if (not imm.lstrip('-').isdigit()) or (int(imm)>2047 or int(imm)<-2048):
+            raise SyntaxError("Immediate value out of range at line " + str(pc//4 + 1))
     r = decToBinary(imm,12)+registers[rs]+funct3_I[ins[0]]+registers[ins[1]]+opCodes[ins[0]]
 
     return r
@@ -155,8 +159,11 @@ def stype(ins):
     imm = x[0]
     if ins[1] not in registers or x[1] not in registers:
         raise SyntaxError("Wrong register name at line " + str(pc//4 + 1))
+    
     else:
-        final_imm = decToBinary(imm,12)
+        if (not imm.lstrip('-').isdigit()) or (int(imm) > 2047 or int(imm) < -2048):
+            raise SyntaxError("Immediate value out of range at line " + str(pc//4 + 1))
+        final_imm = decToBinary(imm, 12)
         s = final_imm[:7] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[7:] + opCodes['sw']
     return s
 
@@ -169,7 +176,6 @@ def rtype(ins):
         r=funct7_R[ins[0]] + registers[ins[3]] + registers[ins[2]] + funct3_R[ins[0]] + registers[ins[1]] + opCodes['R']
     return r 
 
-
 def btype(ins):
     y = ins[3].strip()
     if ins[1] not in registers or ins[2] not in registers:
@@ -178,6 +184,8 @@ def btype(ins):
         i = (labels[y] - pc)
     else:
         i = y
+    if (not str(i).lstrip('-').isdigit()) or (int(i) > 2047 or int(i) < -2048):
+        raise SyntaxError("Immediate value out of range at line " + str(pc//4 + 1))
     x = decToBinary(str(i), 12)
     x = x[:-1]
     x = x[0] + x
@@ -186,15 +194,17 @@ def btype(ins):
 
 
 def jtype(ins):
-    y=ins[2].strip()
+    y = ins[2].strip()
     if y in labels:
-        i=labels[y]-pc
+        i = labels[y] - pc
     else:
-        i=y
-    x=decToBinary(str(i),20)
-    x=x[:-1]
-    x=x[0]+x
-    r=x[0]+x[-10:]+x[-11]+x[1:9]+registers[ins[1]]+opCodes['jal']
+        i = y
+    if (not str(i).lstrip('-').isdigit()) or (int(i) > 524287 or int(i) < -524288):
+        raise SyntaxError("Immediate value out of range at line " + str(pc//4 + 1))
+    x = decToBinary(str(i), 20)
+    x = x[:-1]
+    x = x[0] + x
+    r = x[0] + x[-10:] + x[-11] + x[1:9] + registers[ins[1]] + opCodes['jal']
     return r
 
 
