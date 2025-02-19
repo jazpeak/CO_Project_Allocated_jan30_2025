@@ -191,28 +191,32 @@ def jtype(ins):
     r=x[0]+x[-10:]+x[-11]+x[1:9]+registers[ins[1]]+opCodes['jal']
     return r
 
-def checkLabel(s):
+def checkLabel(s,label=0):
     global pc
-    if s[0].endswith(":"):
-                label = s[0][:-1]
-                labels[label] = pc
-                s=s[1:]
-                
-                #instructions.append(s[1:])  #suckitup  #kalkisuraj #mbsurajheart # jainsforever # khareyatn
-    #print(s)
+    if label!=0:
+        labels[label] = pc
     if s:
         instructions.append(s)
-        pc+=1
+        pc+=4
 
 
 def fileRead (file_name):
     with open(file_name, 'r') as file:
         while True:
             line = file.readline().strip()
+            label=0
             if not line:
                 break
-            s = re.split(pattern=r"[,. ]", string=line)
-            checkLabel(s)
+            s = line.split(":")
+            if len(s)>1:
+                label=s[0]
+                s[1]=s[1].strip()
+                s = re.split(pattern=r"[,. ]", string=s[1])
+            else:
+                s[0]=s[0].strip()
+                s=re.split(pattern=r"[,. ]", string=s[0])
+            print(s,label)
+            checkLabel(s,label)
 
 def fileOutput (file_name):
     global pc
@@ -220,7 +224,7 @@ def fileOutput (file_name):
     with open(file_name, 'w') as file:
         for ins in instructions:
             file.write(checkType(ins) + '\n')
-            pc+=1
+            pc+=4
 
 
 filename = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
