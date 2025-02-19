@@ -146,12 +146,18 @@ def stype(ins):
     ins[2] = ins[2].rstrip(')')
     x = ins[2].split('(')
     imm = x[0]
+    if ins[1] not in registers or x[1] not in registers:
+        raise SyntaxError("Wrong register name at line " + str(pc//4 + 1))
     final_imm = decToBinary(imm,12)
     s = final_imm[:7] + registers[ins[1]] + registers[x[1]] + funct3_S[ins[0]] + final_imm[7:] + opCodes['sw']
     return s
 
 def rtype(ins):
-    r=funct7_R[ins[0]] + registers[ins[3]] + registers[ins[2]] + funct3_R[ins[0]] + registers[ins[1]] + opCodes['R']
+    if ins[3] not in registers or ins[2] not in registers or ins[1] not in registers:
+        r = None
+        raise SyntaxError("Wrong register name at line " + str(pc//4 + 1))
+    else:
+        r=funct7_R[ins[0]] + registers[ins[3]] + registers[ins[2]] + funct3_R[ins[0]] + registers[ins[1]] + opCodes['R']
     return r 
 
 
@@ -206,19 +212,19 @@ def fileRead (file_name):
                 s=re.split(pattern=r"[,. ]", string=s[0])
             checkLabel(s,label)
 
-def fileOutput (file_name):
+def fileOutput (Output):
     if instructions[-1] != ["beq", "zero", "zero", "0"]:
         raise SyntaxError("Missing virtual halt instruction at the end")
     global pc
     pc=0
-    with open(file_name, 'w') as file:
+    with open(Output, 'w') as file:
         for ins in instructions:
             file.write(checkType(ins) + '\n')
             pc+=4
 
 
-filename = "c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/Ex_test_2.txt"
-output = "c:/Users/aryan/OneDrive/Documents/CO Project/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
+file_name = "c:/kj/CO_Project_Allocated_jan30_2025/SimpleAssembler/input.txt"
+output = "c:/kj/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
 
-fileRead(filename)
+fileRead(file_name)
 fileOutput(output)
