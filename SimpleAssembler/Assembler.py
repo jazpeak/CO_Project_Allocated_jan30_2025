@@ -131,22 +131,21 @@ def decToBinary(n, x):
 
 
 def itype(ins):
+    r = ""
     if len(ins)==3:
         ins[2]=ins[2].rstrip(')')
         x=ins[2].split('(')
         imm=x[0]
         rs=x[1]
         if ins[1] not in registers or rs not in registers:
-            r = None
             raise SyntaxError("Wrong register name at line " + str(pc//4 + 1))
     if len(ins)==4:
         imm=ins[3].strip()
         rs=ins[2].strip()
         if ins[1] not in registers or rs not in registers:
-            r = None
             raise SyntaxError("Wrong register name at line " + str(pc//4 + 1))
-    else:
-        r= decToBinary(imm,12)+registers[rs]+funct3_I[ins[0]]+registers[ins[1]]+opCodes[ins[0]]
+    r = decToBinary(imm,12)+registers[rs]+funct3_I[ins[0]]+registers[ins[1]]+opCodes[ins[0]]
+
     return r
 
 def stype(ins):
@@ -185,17 +184,15 @@ def btype(ins):
 
 
 def jtype(ins):
-    y = ins[2].strip()
-    if ins[1] not in registers:
-        raise SyntaxError("Wrong register name at line " + str(pc//4 + 1))
+    y=ins[2].strip()
     if y in labels:
-        i = labels[y] - pc
+        i=labels[y]-pc
     else:
-        i = y
-    x = decToBinary(str(i), 20)
-    x = x[:-1]
-    x = x[0] + x
-    r = x[0] + x[-10:] + x[-11] + x[1:9] + registers[ins[1]] + opCodes['jal']
+        i=y
+    x=decToBinary(str(i),20)
+    x=x[:-1]
+    x=x[0]+x
+    r=x[0]+x[-10:]+x[-11]+x[1:9]+registers[ins[1]]+opCodes['jal']
     return r
 
 def checkLabel(s,label=0):
