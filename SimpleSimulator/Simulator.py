@@ -17,6 +17,12 @@ def decode_instruction(instr):
                 registers[rd] = registers[rs1] + registers[rs2]
             elif funct7 == "0100000":  # subtraacting
                 registers[rd] = registers[rs1] - registers[rs2]
+        
+        elif funct3 == "111" and funct7 == "0000000":  # and
+            registers[rd] = registers[rs1] and registers[rs2]
+        
+        elif funct3 == "110" and funct7 == "0000000":  # or
+            registers[rd] = registers[rs1] | registers[rs2]
 
     
     if opcode == "0000011": # checks i - type lw
