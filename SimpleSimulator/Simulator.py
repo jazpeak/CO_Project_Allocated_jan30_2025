@@ -8,12 +8,12 @@ def binary_to_decimal(binary):  # this function converts binary to decimal to st
 
 def decode_instruction(instr):
 
-    opcode = instr[7:]
+    opcode = instr[25:]
 
     if opcode == "0110011": # checks r - type
         funct7 = instr[:7]  # First 7 bits
-        rs2 = int(instr[7:12], 2)  # sregister 2
-        rs1 = int(instr[12:17], 2)  # sregister 1
+        rs2 = int(instr[7:12], 2)  # sregister 2 , can also use above function to convert to int
+        rs1 = int(instr[12:17], 2)  # sregister 1 , can also use above function to convert to int
         funct3 = instr[17:20]  # funct3
         rd = int(instr[20:25], 2)  # storage register
         opcode = "0110011"
@@ -25,7 +25,7 @@ def decode_instruction(instr):
                 registers[rd] = registers[rs1] - registers[rs2]
         
         elif funct3 == "111" and funct7 == "0000000":  # and
-            registers[rd] = registers[rs1] and registers[rs2]
+            registers[rd] = registers[rs1] & registers[rs2]
         
         elif funct3 == "110" and funct7 == "0000000":  # or
             registers[rd] = registers[rs1] | registers[rs2]
@@ -37,6 +37,7 @@ def decode_instruction(instr):
                 registers[rd] = 0
         
         elif funct3 == "001" and funct7 == "0000000":  # srl shift right logical
+            registers[rd] = registers[rs1] >> (registers[rs2] & 0x1F)
 
 
     
