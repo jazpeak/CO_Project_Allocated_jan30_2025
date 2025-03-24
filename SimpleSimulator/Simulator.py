@@ -1,5 +1,11 @@
 registers = [0] * 32    # thiss is creaitng a list of 32 integers where all elements are 0 for now
 
+def binary_to_decimal(binary):  # this function converts binary to decimal to store in registers as we cannot perform addition on the strings
+    decimal = 0
+    for digit in binary:
+        decimal = decimal*2 + int(digit)
+    return decimal
+
 def decode_instruction(instr):
 
     opcode = instr[7:]
@@ -23,6 +29,15 @@ def decode_instruction(instr):
         
         elif funct3 == "110" and funct7 == "0000000":  # or
             registers[rd] = registers[rs1] | registers[rs2]
+        
+        elif funct3 == "010" and funct7 == "0000000":  # slt Set Less Than
+            if registers[rs1] < registers[rs2]:
+                registers[rd] = 1 
+            else:
+                registers[rd] = 0
+        
+        elif funct3 == "001" and funct7 == "0000000":  # srl shift right logical
+
 
     
     if opcode == "0000011": # checks i - type lw
