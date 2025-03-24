@@ -1,9 +1,17 @@
+registers = [0] * 32    # thiss is creaitng a list of 32 integers where all elements are 0 for now
+
 def decode_instruction(instr):
 
     opcode = instr[7:]
 
     if opcode == "0110011": # checks r - type
-                         # for loop to store values of registrsss bla bla..
+        funct7 = instr[:7]  # First 7 bits
+        rs2 = int(instr[7:12], 2)  # sregister 2
+        rs1 = int(instr[12:17], 2)  # sregister 1
+        funct3 = instr[17:20]  # funct3
+        rd = int(instr[20:25], 2)  # storage register
+        opcode = "0110011"  
+        
     
     if opcode == "0000011": # checks i - type lw
         for                 # for loop to store values of registrsss bla bla..
