@@ -1,5 +1,6 @@
 registers = [0] * 32    # thiss is creaitng a list of 32 integers where all elements are 0 for now
 memory=[0]*32
+
 def bin_to_dec(binary):  
     decimal = 0
     for digit in binary:
@@ -54,6 +55,7 @@ def twos_to_dec(t):
     return bin_to_dec(t)
 
 def decode_instruction(instr):
+    global flag
     opcode = instr[25:]
     if opcode == "0110011": # checks r - type
         funct7 = instr[:7]  
@@ -133,6 +135,7 @@ def decode_instruction(instr):
 
         if funct3=="000":
             registers[rd]=PC+4
+            flag=1
             PC=registers[6]+imm
             if PC%2==1:
                 PC-=1   # making lsb 1
@@ -143,9 +146,12 @@ def decode_instruction(instr):
         imm=twos_to_dec(imm)                                  # for arul to change according to wat he makes
         rs2=instr[7:12]
         rs1=instr[12:17]
+        flag=1
         if funct3=="000":
             if rs1==rs2:
                 PC+=imm
+                if imm==0:
+                    PC=0
         elif funct3=="001":
             if rs1!=rs2:
                 PC+=imm
@@ -159,6 +165,7 @@ def decode_instruction(instr):
         imm=twos_to_dec(imm)                                        # for arul to change as required
         rd=int(instr[20:25],2)                                      # store pc+4 in rd, and PC is increased by immediate, and binary(PC) last digit is made to 0 but subtracting 1
         registers[rd]=PC+4
+        flag=1
         PC=PC+imm
         if PC%2==1:
             PC-=1
@@ -166,6 +173,7 @@ def decode_instruction(instr):
     
 
 PC=0
+flag=0
 totallines=0
 def setup(file_name):
     global totallines               #setup function(pc counter etc, add whatever you need to setup) ~ Jazl
@@ -174,6 +182,19 @@ def setup(file_name):
     totallines=len(fl)
     for i in range(totallines):
         fl[i]=fl[i].strip()
-
     fil.close()
+
+def run(il):
+    global PC
+    global flag
+    while (PC!=0):
+        if flag==0:
+            PC+=4
+        else:
+            flag=0
+        decode_instruction(il[PC%4])
+
+
+
+
 setup("D:\CO_Project_Allocated_jan30_2025\CO_Project_Allocated_jan30_2025\SimpleSimulator\simple_2.txt")
