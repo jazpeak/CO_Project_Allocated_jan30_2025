@@ -167,6 +167,19 @@ def decode_instruction(instr):
             PC-=1
     
     
+def printoutput():
+    s=''
+    s+='0b'+dec_to_twos(PC)
+    s+=' '
+    rs1='00000'
+    while rs1!='11111':
+        s+='0b'+dec_to_twos(registers[rs1])
+        s+=' '
+        rs1=dec_to_bin(bin_to_dec(rs1)+1)
+    s+='0b'+dec_to_twos(registers[rs1])
+    fh=open("output.txt",'a')
+    fh.write(s+'/n')
+    fh.close()
 
 PC=0
 flag=0
@@ -189,7 +202,7 @@ def run(il):
         else:
             flag=0
         decode_instruction(il[PC%4])
-
+        printoutput()
 
 
 
