@@ -89,19 +89,15 @@ def decode_instruction(instr):
             registers[rd] = registers[rs1] >> (int(x[-5:],2))
 
 
-    if opcode == '0100011': #stype sw
-        rs1=int(instr[12:17],2)
-        rs2=int(instr[7:12],2)
-        funct3=instr[17:20]
-        imm=twos_to_dec(instr[:7]+instr[20:25])
-        addr=registers[rs1]+imm
-        
-        if funct3=='010':
-            memory[addr]=rs2
+    if opcode == '0100011':  # S-type sw
+        rs1 = int(instr[12:17], 2)
+        rs2 = int(instr[7:12], 2)
+        funct3 = instr[17:20]
+        imm = twos_to_dec(instr[:7] + instr[20:25])  # Combine immediate parts
+        addr = registers[rs1] + imm  # Calculate memory address
 
-    #memory is completely wrong change
-            
-
+        if funct3 == '010':  # Store word (sw)
+            memory[addr] = registers[rs2]  # Store the value from rs2 into memory
 
 
     if opcode == "0000011": #  i - type lw
