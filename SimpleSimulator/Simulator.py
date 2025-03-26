@@ -180,7 +180,25 @@ def printoutput():
     fh=open("output.txt",'a')
     fh.write(s+'/n')
     fh.close()
+    
+def memorywrite():
+    fh=open('output.txt','a')
+    c=0
+    for i in memory:
+        s="0x000010{}:{}".format(hexa(c),'0b'+dec_to_twos(i))
+        fh.write(s+'\n')
+        fh.close()
+        c+=4
+    
 
+def hexa(d):
+    h={0:'0',1:'1', 2:'2', 3:'3', 4:'4', 5:'5', 6:'6', 7:'7', 8:'8', 9:'9', 10:'A', 11:'B', 12:'C', 13:'D', 14:'E', 15:'F'}
+    r=''
+    while d>0:
+        r=h[d%16]+r
+        d//=16
+    r='0'*(2-len(r))
+    return r
 PC=0
 flag=0
 totallines=0
@@ -203,7 +221,7 @@ def run(il):
             flag=0
         decode_instruction(il[PC%4])
         printoutput()
-
+    memorywrite()
 
 
 setup("D:\CO_Project_Allocated_jan30_2025\CO_Project_Allocated_jan30_2025\SimpleSimulator\simple_2.txt")
