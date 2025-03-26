@@ -1,5 +1,5 @@
 registers = [0] * 32    # thiss is creaitng a list of 32 integers where all elements are 0 for now
-
+memory=[0]*32
 def binary_to_decimal(binary):  # this function converts binary to decimal to store in registers as we cannot perform addition on the strings
     decimal = 0
     for digit in binary:
@@ -40,21 +40,45 @@ def decode_instruction(instr):
             registers[rd] = registers[rs1] >> (registers[rs2] & 0x1F)
 
 
-    
-    if opcode == "0000011": # checks i - type lw
-        for                 # for loop to store values of registrsss bla bla..
-    
-    if opcode == "0010011": # checks i - type addi
-        for                 # for loop to store values of registrsss bla bla..
-    
-    if opcode == "1100111": # checks i - type jallrdwwd
-        for                 # for loop to store values of registrsss bla bla..
+    if opcode == '0100011': #stype sw
+        opcode='0100011'
+        rs1=int(instr[12:17],2)
+        rs2=int(instr[7:12],2)
+        funct3=int(instr[17:20],2)
+        imm=int((instr[:7]+instr[20:25]),2)
+        addr=registers[rs1]+imm
+        
+        if funct3=='010':
+            memory[addr]=rs2
+    #memory is completely wrong change
+            
 
-    if opcode == "1100011": # checks b - type
-        for                 # for loop to store values of registrsss bla bla..
+
+
+    if opcode == "0000011": # checks i - type lw
+        imm=int(instr[:12],2)
+        rs1=int(instr[12:17],2)
+        funct3=int(instr[17:20],2)int(instr[20:25])
+        rd=int(instr[20:25],2)
+        addr=registers[rs1]+imm
+
+        if funct3=='010':
+            registers[rd]=memory[addr]
     
-    if opcode == "1101111": # checks j - type
-        for                 # for loop to store values of registrsss bla bla..
+
+               # for loop to store values of registrsss bla bla..
+    
+    #if opcode == "0010011": # checks i - type addi
+        #for                 # for loop to store values of registrsss bla bla..
+    
+    #if opcode == "1100111": # checks i - type jallrdwwd
+        #for                 # for loop to store values of registrsss bla bla..
+
+    #if opcode == "1100011": # checks b - type
+        #for                 # for loop to store values of registrsss bla bla..
+    
+    #if opcode == "1101111": # checks j - type
+        #for                 # for loop to store values of registrsss bla bla..
     
 
 
@@ -64,5 +88,6 @@ def run(file_name):
     fl = fil.readlines()
     for line in fl:
         decode_instruction(line.strip())
+        #printall()
     
     fil.close()

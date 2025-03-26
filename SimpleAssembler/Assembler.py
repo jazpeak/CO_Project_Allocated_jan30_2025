@@ -246,8 +246,8 @@ def fileOutput (Output):
             pc+=4
 
 
-file_name = "c:/kj/CO_Project_Allocated_jan30_2025/SimpleAssembler/input.txt"
-output = "c:/kj/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
+file_name = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/input.txt"
+output = "D:/CO_Project_Allocated_jan30_2025/CO_Project_Allocated_jan30_2025/SimpleAssembler/output.txt"
 
 fileRead(file_name)
 fileOutput(output)
