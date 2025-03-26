@@ -56,17 +56,19 @@ def twos_to_dec(t):
 
 def decode_instruction(instr):
     global flag
-    opcode = instr[25:]
+    global PC
+    opcode = instr[-7:]
+    print(instr)
     if opcode == "0110011": # checks r - type
         funct7 = instr[:7]  
-        x=rs2
-        y=rs1
         rs2 = int(instr[7:12], 2)  
         rs1 = int(instr[12:17], 2)  
+        x=instr[7:12]
+        y=instr[12:17]
         funct3 = instr[17:20]  # funct3
         rd = int(instr[20:25], 2)  # storage register
-        signedrs2=-int(x[1:],2) if x[0]==1 else int(x[1:],2)
-        signedrs1=-int(y[1:],2) if y[0]==1 else int(y[1:],2)
+        signedrs2=(-int(x[1:],2)) if x[0]==1 else int(x[1:],2)
+        signedrs1=(-int(y[1:],2)) if y[0]==1 else int(y[1:],2)
 
 
         if funct3 == "000":  
@@ -137,6 +139,7 @@ def decode_instruction(instr):
                 PC-=1   # making lsb 1
 
     if opcode == "1100011": #b-type
+        print("b")
         funct3=instr[17:20]
         imm=instr[0]+instr[-8]+instr[1:7]+instr[20:25]        #~Jazl
         imm=twos_to_dec(imm)                                  # for arul to change according to wat he makes
@@ -144,8 +147,10 @@ def decode_instruction(instr):
         rs1=instr[12:17]
         flag=1
         if funct3=="000":
+            print("rs1 rs1:",rs1,rs2)
             if rs1==rs2:
                 PC+=imm
+                print("imm:",imm)
                 if imm==0:
                     PC=0
         elif funct3=="001":
@@ -171,21 +176,21 @@ def printoutput():
     s=''
     s+='0b'+dec_to_twos(PC)
     s+=' '
-    rs1='00000'
-    while rs1!='11111':
+    rs1=0
+    while rs1!=31:
         s+='0b'+dec_to_twos(registers[rs1])
         s+=' '
-        rs1=dec_to_bin(bin_to_dec(rs1)+1)
+        rs1+=1
     s+='0b'+dec_to_twos(registers[rs1])
     fh=open("output.txt",'a')
-    fh.write(s+'/n')
+    fh.write(s+'\n')
     fh.close()
     
 def memorywrite():
-    fh=open('output.txt','a')
     c=0
-    for i in memory:
-        s="0x000010{}:{}".format(hexa(c),'0b'+dec_to_twos(i))
+    for i in range(0,31):
+        fh=open('output.txt','a')
+        s="0x00010{}:{}".format(hexa(c),'0b'+dec_to_twos(memory[i]))
         fh.write(s+'\n')
         fh.close()
         c+=4
@@ -197,7 +202,7 @@ def hexa(d):
     while d>0:
         r=h[d%16]+r
         d//=16
-    r='0'*(2-len(r))
+    r='0'*(2-len(r))+r
     return r
 PC=0
 flag=0
@@ -210,18 +215,31 @@ def setup(file_name):
     for i in range(totallines):
         fl[i]=fl[i].strip()
     fil.close()
+    return fl
 
 def run(il):
     global PC
     global flag
-    while (PC!=0):
+    arul=0
+    u=0
+    while (PC!=0 or arul==0):
+        #print(PC)
+        u+=1
+        arul=1
         if flag==0:
             PC+=4
         else:
+            print('hello')
             flag=0
-        decode_instruction(il[PC%4])
+        print((PC//4)-1)
+        decode_instruction(il[(PC//4)-1])
+        print(PC,flag)
         printoutput()
+        if u==50:
+            break
     memorywrite()
 
 
-setup("D:\CO_Project_Allocated_jan30_2025\CO_Project_Allocated_jan30_2025\SimpleSimulator\simple_2.txt")
+il=setup("D:\CO_Project_Allocated_jan30_2025\CO_Project_Allocated_jan30_2025\SimpleSimulator\simple_2.txt")
+print(il)
+run(il)
