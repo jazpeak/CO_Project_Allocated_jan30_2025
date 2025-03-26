@@ -5,89 +5,128 @@ def binary_to_decimal(binary):  # this function converts binary to decimal to st
     for digit in binary:
         decimal = decimal*2 + int(digit)
     return decimal
-
 def decode_instruction(instr):
 
     opcode = instr[25:]
 
     if opcode == "0110011": # checks r - type
-        funct7 = instr[:7]  # First 7 bits
-        rs2 = int(instr[7:12], 2)  # sregister 2 , can also use above function to convert to int
-        rs1 = int(instr[12:17], 2)  # sregister 1 , can also use above function to convert to int
+        funct7 = instr[:7]  
+        x=rs2
+        y=rs1
+        rs2 = int(instr[7:12], 2)  
+        rs1 = int(instr[12:17], 2)  
         funct3 = instr[17:20]  # funct3
         rd = int(instr[20:25], 2)  # storage register
-        opcode = "0110011"
+        signedrs2=-int(x[1:],2) if x[0]==1 else int(x[1:],2)
+        signedrs1=-int(y[1:],2) if y[0]==1 else int(y[1:],2)
 
-        if funct3 == "000":  # checks for add or subtract as funct3 is same for them both
-            if funct7 == "0000000":  # addding
+
+        if funct3 == "000":  
+            if funct7 == "0000000":  
                 registers[rd] = registers[rs1] + registers[rs2]
-            elif funct7 == "0100000":  # subtraacting
+            elif funct7 == "0100000":  
                 registers[rd] = registers[rs1] - registers[rs2]
         
-        elif funct3 == "111" and funct7 == "0000000":  # and
+        elif funct3 == "111" and funct7 == "0000000":                   #~Jazl or Soumil
             registers[rd] = registers[rs1] & registers[rs2]
         
-        elif funct3 == "110" and funct7 == "0000000":  # or
+        elif funct3 == "110" and funct7 == "0000000":  
             registers[rd] = registers[rs1] | registers[rs2]
         
-        elif funct3 == "010" and funct7 == "0000000":  # slt Set Less Than
-            if registers[rs1] < registers[rs2]:
+        elif funct3 == "010" and funct7 == "0000000":  
+            if signedrs1 < signedrs2:
                 registers[rd] = 1 
             else:
                 registers[rd] = 0
         
-        elif funct3 == "001" and funct7 == "0000000":  # srl shift right logical
-            registers[rd] = registers[rs1] >> (registers[rs2] & 0x1F)
+        elif funct3 == "001" and funct7 == "0000000":  
+            registers[rd] = registers[rs1] >> (int(x[-5:],2))
 
 
     if opcode == '0100011': #stype sw
-        opcode='0100011'
         rs1=int(instr[12:17],2)
         rs2=int(instr[7:12],2)
-        funct3=int(instr[17:20],2)
-        imm=int((instr[:7]+instr[20:25]),2)
+        funct3=instr[17:20]
+        imm=twos_to_dec(instr[:7]+instr[20:25])
         addr=registers[rs1]+imm
         
         if funct3=='010':
             memory[addr]=rs2
+
     #memory is completely wrong change
             
 
 
 
-    if opcode == "0000011": # checks i - type lw
-        imm=int(instr[:12],2)
+    if opcode == "0000011": #  i - type lw
+        imm=twos_to_dec(instr[:12])   # arul to do
         rs1=int(instr[12:17],2)
-        funct3=int(instr[17:20],2)int(instr[20:25])
+        funct3=instr[17:20]                                   #~Jazl
         rd=int(instr[20:25],2)
         addr=registers[rs1]+imm
 
         if funct3=='010':
-            registers[rd]=memory[addr]
+            registers[rd]=memory[addr]  #sign extend or nah? need to c . update: will do later when output perhaps. stil thinking.
+        
+    if opcode == "0010011": #  i - type addi
+        imm=twos_to_dec(instr[:12])   # arul to do
+        rs1=int(instr[12:17],2)
+        funct3=instr[17:20]
+        rd=int(instr[20:25],2)                                #~ Jazl
+        addr=registers[rs1]+imm
+
+        if funct3=="000":
+            registers[rd]=registers[rs1]+imm
+
+    if opcode == "1100111": #  i - type jalr
+        imm=twos_to_dec(instr[:12])   # arul to do
+        rs1=int(instr[12:17],2)
+        funct3=instr[17:20]
+        rd=int(instr[20:25],2)                                # ~Jazl
+        addr=registers[rs1]+imm
+
+        if funct3=="000":
+            registers[rd]=PC+4
+            PC=registers[6]+imm
+            if PC%2==1:
+                PC-=1   # making lsb 1
+
+    if opcode == "1100011": #b-type
+        funct3=instr[17:20]
+        imm=instr[0]+instr[-8]+instr[1:7]+instr[20:25]        #~Jazl
+        imm=twos_to_dec(imm)                                  # for arul to change according to wat he makes
+        rs2=instr[7:12]
+        rs1=instr[12:17]
+        if funct3=="000":
+            if rs1==rs2:
+                PC+=imm
+        elif funct3=="001":
+            if rs1!=rs2:
+                PC+=imm
+        else:
+            "ERROR: Not a b type function"
     
 
-               # for loop to store values of registrsss bla bla..
     
-    #if opcode == "0010011": # checks i - type addi
-        #for                 # for loop to store values of registrsss bla bla..
+    if opcode == "1101111": # checks j - type
+        imm=instr[0]+instr[12:20]+instr[11]+instr[1:11]                 # ~Jazl
+        imm=twos_to_dec(imm)                                        # for arul to change as required
+        rd=int(instr[20:25],2)                                      # store pc+4 in rd, and PC is increased by immediate, and binary(PC) last digit is made to 0 but subtracting 1
+        registers[rd]=PC+4
+        PC=PC+imm
+        if PC%2==1:
+            PC-=1
     
-    #if opcode == "1100111": # checks i - type jallrdwwd
-        #for                 # for loop to store values of registrsss bla bla..
-
-    #if opcode == "1100011": # checks b - type
-        #for                 # for loop to store values of registrsss bla bla..
-    
-    #if opcode == "1101111": # checks j - type
-        #for                 # for loop to store values of registrsss bla bla..
     
 
-
-#The input file will be in binary format. we will take line by line from function below and put it in decode_instruction function
-def run(file_name):
+PC=0
+totallines=0
+def setup(file_name):
+    global totallines               #setup function(pc counter etc, add whatever you need to setup) ~ Jazl
     fil = open(file_name, "r")
     fl = fil.readlines()
-    for line in fl:
-        decode_instruction(line.strip())
-        #printall()
-    
+    totallines=len(fl)
+    for i in range(totallines):
+        fl[i]=fl[i].strip()
     fil.close()
+setup("D:\CO_Project_Allocated_jan30_2025\CO_Project_Allocated_jan30_2025\SimpleSimulator\simple_2.txt")
