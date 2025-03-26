@@ -1,10 +1,46 @@
 registers = [0] * 32    # thiss is creaitng a list of 32 integers where all elements are 0 for now
 memory=[0]*32
-def binary_to_decimal(binary):  # this function converts binary to decimal to store in registers as we cannot perform addition on the strings
+
+def bin_to_dec(binary):  
     decimal = 0
     for digit in binary:
         decimal = decimal*2 + int(digit)
     return decimal
+
+def dec_to_bin(dec):
+    s=''
+    f= dec<0
+    dec=abs(dec)
+    while dec>0:
+        s+=str(dec%2)
+        dec//=2
+    s=s[::-1]
+    if s=='':
+        return '0'
+
+    if f:
+        s=bin_to_twos(s)
+    return(s)
+
+def bin_to_twos(b):
+    b=b.replace('1','2')
+    b=b.replace('0','1')
+    b=b.replace('2','0')
+    f=len(b)
+    b=str(bin(int(b,2)+1))
+    if len(b)>f+2:
+        b=b[3:]
+    else:
+        b=b[2:]
+    b='0'*(f-len(b))+b
+    return b
+
+def twos_to_dec(t):
+    if t[0]=='1':
+        t=bin_to_twos(t)
+        return -1*bin_to_dec(t)
+    return bin_to_dec(t)
+
 def decode_instruction(instr):
 
     opcode = instr[25:]
