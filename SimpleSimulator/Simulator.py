@@ -1,11 +1,23 @@
 registers = [0] * 32    # thiss is creaitng a list of 32 integers where all elements are 0 for now
 memory=[0]*32
-
 def bin_to_dec(binary):  
     decimal = 0
     for digit in binary:
         decimal = decimal*2 + int(digit)
     return decimal
+
+def dec_to_twos(d):
+    f=d<0
+    d=abs(d)
+    s=''
+    if f:
+        s=dec_to_bin(d)
+        s=bin_to_twos(s)
+        s='1'*(32-len(s))+s
+    else:
+        s=dec_to_bin(d)
+        s='0'*(32-len(s))+s
+        return s
 
 def dec_to_bin(dec):
     s=''
@@ -42,9 +54,7 @@ def twos_to_dec(t):
     return bin_to_dec(t)
 
 def decode_instruction(instr):
-
     opcode = instr[25:]
-
     if opcode == "0110011": # checks r - type
         funct7 = instr[:7]  
         x=rs2
@@ -164,5 +174,6 @@ def setup(file_name):
     totallines=len(fl)
     for i in range(totallines):
         fl[i]=fl[i].strip()
+
     fil.close()
 setup("D:\CO_Project_Allocated_jan30_2025\CO_Project_Allocated_jan30_2025\SimpleSimulator\simple_2.txt")
