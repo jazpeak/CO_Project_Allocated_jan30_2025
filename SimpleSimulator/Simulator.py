@@ -1,4 +1,5 @@
 registers = [0] * 32    # thiss is creaitng a list of 32 integers where all elements are 0 for now
+registers[2] = 101111100   
 memory=[0]*32
 
 def bin_to_dec(binary):  
