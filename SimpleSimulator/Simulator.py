@@ -18,7 +18,7 @@ def dec_to_twos(d):
         s='1'*(32-len(s))+s
     else:
         s=dec_to_bin(d)
-        s='0'*(32-len(s))+s
+        s='0'*(32-len(s))+s+
         return s
 
 def dec_to_bin(dec):
