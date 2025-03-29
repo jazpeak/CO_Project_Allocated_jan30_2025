@@ -64,7 +64,7 @@ def decode_instruction(instr):
     global flag
     global PC
     opcode = instr[-7:]
-    print(instr)
+    #print(instr)
     if opcode == "0110011": # checks r - type
         funct7 = instr[:7]  
         rs2 = int(instr[7:12], 2)  
@@ -78,9 +78,9 @@ def decode_instruction(instr):
 
 
         if funct3 == "000":  
-            print("gay")
+            #print("gay")
             if funct7 == "0000000":  
-                print("kawkd",rs1,rs2)
+                #print("kawkd",rs1,rs2)
                 registers[rd] = registers[rs1] + registers[rs2]
             elif funct7 == "0100000":  
                 registers[rd] = registers[rs1] - registers[rs2]
@@ -98,7 +98,7 @@ def decode_instruction(instr):
                 registers[rd] = 0
             #registers[rs2] = signedrs2
             #registers[rs1] = signedrs1
-            print("hwkn",registers[rs2])
+            #print("hwkn",registers[rs2])
         
         elif funct3 == "001" and funct7 == "0000000":  
             registers[rd] = registers[rs1] >> (int(x[-5:],2))
@@ -122,10 +122,10 @@ def decode_instruction(instr):
         rd=int(instr[20:25],2)
         rs1=10000-int(dec_to_hex(rs1)[2:])
         addr=rs1+imm
-        print("addsvaw",registers[rs1],rs1,addr,imm,addr)
+        #print("addsvaw",registers[rs1],rs1,addr,imm,addr)
 
         if funct3=='010':
-            print("aefawf",addr)
+            #print("aefawf",addr)
             
             registers[rd]=memory[addr]  #sign extend or nah? need to c . update: will do later when output perhaps. stil thinking.
         
@@ -157,22 +157,22 @@ def decode_instruction(instr):
                 PC-=1   # making lsb 1
 
     if opcode == "1100011": #b-type
-        print("b")
+        #print("b")
         funct3=instr[17:20]
         imm=instr[0]+instr[-8]+instr[1:7]+instr[20:25]        #~Jazl
         imm=twos_to_dec(imm)                                  # for arul to change according to wat he makes
         rs2=instr[7:12]
         rs1=instr[12:17]
         if funct3=="000":
-            print("rs1:",rs1)
-            print("rs2:",rs2)   
+            #print("rs1:",rs1)
+            #print("rs2:",rs2)   
 
             if rs1==rs2:
                 flag=1
                 PC+=imm
-                print("imm:",imm)
+                #print("imm:",imm)
                 if imm==0:
-                    print("imm is 0")
+                    #print("imm is 0")
                     PC=0
         elif funct3=="001":
             if rs1!=rs2:
@@ -258,10 +258,10 @@ def run(il):
         if flag==0:
             PC+=4
         else:
-            print('hello')
+            #print('hello')
             flag=0
         decode_instruction(il[(PC//4)-1])
-        print(PC,flag)
+        #print(PC,flag)
         printoutput()
         if u==50:
             break
