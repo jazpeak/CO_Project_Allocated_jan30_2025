@@ -1,4 +1,7 @@
+import sys
+
 registers = [0] * 32    # thiss is creaitng a list of 32 integers where all elements are 0 for now
+registers[2] = 380      # this is the stack pointer, so it is set to 380 for now.
 memory=[0]*32
 
 def bin_to_dec(binary):  
@@ -18,7 +21,7 @@ def dec_to_twos(d):
     else:
         s=dec_to_bin(d)
         s='0'*(32-len(s))+s
-        return s
+    return s
 
 def dec_to_bin(dec):
     s=''
@@ -48,6 +51,9 @@ def bin_to_twos(b):
     b='0'*(f-len(b))+b
     return b
 
+def dec_to_hex(n):
+    return hex(n)
+
 def twos_to_dec(t):
     if t[0]=='1':
         t=bin_to_twos(t)
@@ -72,7 +78,9 @@ def decode_instruction(instr):
 
 
         if funct3 == "000":  
+            print("gay")
             if funct7 == "0000000":  
+                print("kawkd",rs1,rs2)
                 registers[rd] = registers[rs1] + registers[rs2]
             elif funct7 == "0100000":  
                 registers[rd] = registers[rs1] - registers[rs2]
@@ -88,6 +96,9 @@ def decode_instruction(instr):
                 registers[rd] = 1 
             else:
                 registers[rd] = 0
+            #registers[rs2] = signedrs2
+            #registers[rs1] = signedrs1
+            print("hwkn",registers[rs2])
         
         elif funct3 == "001" and funct7 == "0000000":  
             registers[rd] = registers[rs1] >> (int(x[-5:],2))
@@ -98,7 +109,7 @@ def decode_instruction(instr):
         rs2 = int(instr[7:12], 2)
         funct3 = instr[17:20]
         imm = twos_to_dec(instr[:7] + instr[20:25])  # Combine immediate parts
-        addr = registers[rs1] + imm  # Calculate memory address
+        addr = rs1 + imm  # Calculate memory address
 
         if funct3 == '010':  # Store word (sw)
             memory[addr] = registers[rs2]  # Store the value from rs2 into memory
@@ -109,27 +120,34 @@ def decode_instruction(instr):
         rs1=int(instr[12:17],2)
         funct3=instr[17:20]                                   #~Jazl
         rd=int(instr[20:25],2)
-        addr=registers[rs1]+imm
+        rs1=10000-int(dec_to_hex(rs1)[2:])
+        addr=rs1+imm
+        print("addsvaw",registers[rs1],rs1,addr,imm,addr)
 
         if funct3=='010':
+            print("aefawf",addr)
+            
             registers[rd]=memory[addr]  #sign extend or nah? need to c . update: will do later when output perhaps. stil thinking.
         
     if opcode == "0010011": #  i - type addi
         imm=twos_to_dec(instr[:12])   # arul to do
         rs1=int(instr[12:17],2)
         funct3=instr[17:20]
-        rd=int(instr[20:25],2)                                #~ Jazl
-        addr=registers[rs1]+imm
-
+        rd=int(instr[20:25],2) 
+        
+        #rs1=10000-int(dec_to_hex(rs1)[2:])                               #~ Jazl
+        addr=rs1+imm
+        
         if funct3=="000":
             registers[rd]=registers[rs1]+imm
+
 
     if opcode == "1100111": #  i - type jalr
         imm=twos_to_dec(instr[:12])   # arul to do
         rs1=int(instr[12:17],2)
         funct3=instr[17:20]
         rd=int(instr[20:25],2)                                # ~Jazl
-        addr=registers[rs1]+imm
+        addr=rs1+imm
 
         if funct3=="000":
             registers[rd]=PC+4
@@ -145,16 +163,20 @@ def decode_instruction(instr):
         imm=twos_to_dec(imm)                                  # for arul to change according to wat he makes
         rs2=instr[7:12]
         rs1=instr[12:17]
-        flag=1
         if funct3=="000":
-            print("rs1 rs1:",rs1,rs2)
+            print("rs1:",rs1)
+            print("rs2:",rs2)   
+
             if rs1==rs2:
+                flag=1
                 PC+=imm
                 print("imm:",imm)
                 if imm==0:
+                    print("imm is 0")
                     PC=0
         elif funct3=="001":
             if rs1!=rs2:
+                flag=1
                 PC+=imm
         else:
             "ERROR: Not a b type function"
@@ -188,9 +210,9 @@ def printoutput():
     
 def memorywrite():
     c=0
-    for i in range(0,31):
+    for i in range(0,32):
         fh=open('output.txt','a')
-        s="0x00010{}:{}".format(hexa(c),'0b'+dec_to_twos(memory[i]))
+        s="0x000100{}:{}".format(hexa(c),'0b'+dec_to_twos(memory[i]))
         fh.write(s+'\n')
         fh.close()
         c+=4
@@ -207,6 +229,14 @@ def hexa(d):
 PC=0
 flag=0
 totallines=0
+
+
+# Command-line file handling
+if len(sys.argv) < 2:
+    ifilename = input("Enter the path of input file: ")
+else:
+    ifilename = sys.argv[1]
+
 def setup(file_name):
     global totallines               #setup function(pc counter etc, add whatever you need to setup) ~ Jazl
     fil = open(file_name, "r")
@@ -223,7 +253,6 @@ def run(il):
     arul=0
     u=0
     while (PC!=0 or arul==0):
-        #print(PC)
         u+=1
         arul=1
         if flag==0:
@@ -231,7 +260,6 @@ def run(il):
         else:
             print('hello')
             flag=0
-        print((PC//4)-1)
         decode_instruction(il[(PC//4)-1])
         print(PC,flag)
         printoutput()
@@ -239,7 +267,5 @@ def run(il):
             break
     memorywrite()
 
-
-il=setup("D:\CO_Project_Allocated_jan30_2025\CO_Project_Allocated_jan30_2025\SimpleSimulator\simple_2.txt")
-print(il)
+il = setup(ifilename)
 run(il)
