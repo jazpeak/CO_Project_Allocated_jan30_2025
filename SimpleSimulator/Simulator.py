@@ -171,6 +171,11 @@ def decode_instruction(instr):
         PC=PC+imm
         if PC%2==1:
             PC-=1
+    elif opcode == '0010111': #u-rype
+        imm=int(instr[0:20],2)
+        rd=int(instr[20:25],2)
+        registers[rd]=PC+(imm << 12)
+        
     else:
         raise ValueError("Invalid opcode" + str(opcode) + " at line " + str(PC//4 + 1))
     
