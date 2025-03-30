@@ -194,6 +194,25 @@ def decode_instruction(instr):
         PC=PC+imm
         if PC%2==1:
             PC-=1
+    if opcode =="1100000":
+        rd=int(instr[20:25],2)
+        funct3=instr[17:20]
+        rs2=int(instr[7:12],2)
+        rs1=int(instr[12:17],2)
+        if funct3=="000":
+            registers[rd]=registers[rs1]*registers[rs2]
+        if funct3=="001":
+            for i in range(32):
+                registers[i]=0
+        if funct3=="010":
+            print("Halting Execution...")
+            jazl=1
+        if funct3=="011":
+            registers[rd]=int(dec_to_bin[rs1][-1],2)
+
+
+
+
     
     
 def printoutput():
