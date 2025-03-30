@@ -251,9 +251,7 @@ def run(il):
     global PC
     global flag
     arul=0
-    u=0
     while (PC!=0 or arul==0):
-        u+=1
         arul=1
         if flag==0:
             PC+=4
@@ -263,8 +261,6 @@ def run(il):
         decode_instruction(il[(PC//4)-1])
         #print(PC,flag)
         printoutput()
-        if u==50:
-            break
     memorywrite()
 
 il = setup(ifilename)
