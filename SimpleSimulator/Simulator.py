@@ -4,9 +4,6 @@ import sys
 registers = [0] * 32    
 registers[2] = 380 
 memory=[0]*32
-PC = 0
-flag = 0
-totallines = 0
 
 
 def bin_to_dec(binary):  
@@ -20,13 +17,10 @@ def dec_to_twos(decimal):
     is_negative = decimal < 0
     decimal = abs(decimal)
     binary_representation = dec_to_bin(decimal)
-
     if is_negative:
         binary_representation = bin_to_twos(binary_representation)
-        # Pad with '1' for negative numbers to make it 32 bits
         binary_representation = '1' * (32 - len(binary_representation)) + binary_representation
     else:
-        # Pad with '0' for positive numbers to make it 32 bits
         binary_representation = '0' * (32 - len(binary_representation)) + binary_representation
 
     return binary_representation
@@ -77,7 +71,6 @@ def decode_instruction(instr):
     global flag
     global PC
     opcode = instr[-7:]
-    #print(instr)
     if opcode == "0110011": # checks r - type
         funct7 = instr[:7]  
         rs2 = int(instr[7:12], 2)  
@@ -104,6 +97,8 @@ def decode_instruction(instr):
                 registers[rd] = 0
         elif funct3 == "001" and funct7 == "0000000":  
             registers[rd] = registers[rs1] >> (int(x[-5:],2))
+        else:
+            raise ValueError("Invalid funct3 for R-type instruction" + str(funct3) + " at line " + str(PC//4 + 1))
     elif opcode == '0100011':  # S-type sw
         rs1 = int(instr[12:17], 2)
         rs2 = int(instr[7:12], 2)
@@ -112,6 +107,8 @@ def decode_instruction(instr):
         addr = rs1 + imm  # Calculate memory address
         if funct3 == '010':  # Store word (sw)
             memory[addr] = registers[rs2]  # Store the value from rs2 into memory
+        else:
+            raise ValueError("Invalid funct3 for S-type instruction" + str(funct3) + " at line " + str(PC//4 + 1))
     elif opcode == "0000011": #  i - type lw
         imm=twos_to_dec(instr[:12])   # arul to do
         rs1=int(instr[12:17],2)
@@ -121,6 +118,8 @@ def decode_instruction(instr):
         addr=rs1+imm
         if funct3=='010':
             registers[rd]=memory[addr]  #sign extend or nah? need to c . update: will do later when output perhaps. stil thinking.
+        else:
+            raise ValueError("Invalid funct3 for I-type instruction" + str(funct3) + " at line " + str(PC//4 + 1))
     elif opcode == "0010011": #  i - type addi
         imm=twos_to_dec(instr[:12])   # arul to do
         rs1=int(instr[12:17],2)
@@ -129,6 +128,8 @@ def decode_instruction(instr):
         addr=rs1+imm
         if funct3=="000":
             registers[rd]=registers[rs1]+imm
+        else:
+            raise ValueError("Invalid funct3 for I-type instruction" + str(funct3) + " at line " + str(PC//4 + 1))
     elif opcode == "1100111": #  i - type jalr
         imm=twos_to_dec(instr[:12])   # arul to do
         rs1=int(instr[12:17],2)
@@ -141,6 +142,8 @@ def decode_instruction(instr):
             PC=registers[6]+imm
             if PC%2==1:
                 PC-=1   # making lsb 1
+        else:
+            raise ValueError("Invalid funct3 for I-type instruction" + str(funct3) + " at line " + str(PC//4 + 1))
     elif opcode == "1100011": #b-type
         funct3=instr[17:20]
         imm=instr[0]+instr[-8]+instr[1:7]+instr[20:25]        #~Jazl
@@ -157,6 +160,8 @@ def decode_instruction(instr):
             if rs1!=rs2:
                 flag=1
                 PC+=imm
+        else:
+            raise ValueError("Invalid funct3 for B-type instruction" + str(funct3) + " at line " + str(PC//4 + 1))
     elif opcode == "1101111": # checks j - type
         imm=instr[0]+instr[12:20]+instr[11]+instr[1:11]                 # ~Jazl
         imm=twos_to_dec(imm)                                        # for arul to change as required
@@ -166,6 +171,8 @@ def decode_instruction(instr):
         PC=PC+imm
         if PC%2==1:
             PC-=1
+    else:
+        raise ValueError("Invalid opcode" + str(opcode) + " at line " + str(PC//4 + 1))
     
     
 def printoutput():
@@ -203,16 +210,18 @@ def hexa(d):
     return r
 
 
+PC = 0
+flag = 0
+totallines = 0
 
 
-# Command-line file handling
 if len(sys.argv) < 2:
     ifilename = input("Enter the path of input file: ")
 else:
     ifilename = sys.argv[1]
 
 def setup(file_name):
-    global totallines               #setup function(pc counter etc, add whatever you need to setup) ~ Jazl
+    global totallines
     fil = open(file_name, "r")
     fl = fil.readlines()
     totallines=len(fl)
