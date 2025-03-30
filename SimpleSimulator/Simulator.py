@@ -61,6 +61,7 @@ def twos_to_dec(t):
     return bin_to_dec(t)
 
 def decode_instruction(instr):
+    global jazl
     global flag
     global PC
     opcode = instr[-7:]
@@ -173,7 +174,8 @@ def decode_instruction(instr):
                 #print("imm:",imm)
                 if imm==0:
                     #print("imm is 0")
-                    PC=0
+                    jazl=1
+                    PC+=0
         elif funct3=="001":
             if rs1!=rs2:
                 flag=1
@@ -228,6 +230,7 @@ def hexa(d):
     return r
 PC=0
 flag=0
+jazl=0
 totallines=0
 
 
@@ -249,9 +252,10 @@ def setup(file_name):
 
 def run(il):
     global PC
+    global jazl
     global flag
     arul=0
-    while (PC!=0 or arul==0):
+    while (jazl==0 or arul==0):
         arul=1
         if flag==0:
             PC+=4
