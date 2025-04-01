@@ -87,9 +87,8 @@ def decode_instruction(instr):
         y = instr[12:17]
         funct3 = instr[17:20]  # funct3
         rd = int(instr[20:25], 2)  # storage register
-        signedrs2 = (-int(x[1:], 2)) if x[0] == '1' else int(x[1:], 2)
-        signedrs1 = (-int(y[1:], 2)) if y[0] == '1' else int(y[1:], 2)
-
+        signedrs1 = twos_to_dec(registers[rs1])
+        signedrs2 = twos_to_dec(registers[rs2])
         if funct3 == "000":  
             if funct7 == "0000000":  
                 registers[rd] = registers[rs1] + registers[rs2]
