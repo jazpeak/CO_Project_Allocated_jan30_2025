@@ -236,17 +236,7 @@ def run():
     MAX_ITERATIONS = 1000  # Arbitrary limit to prevent infinite loops
     iteration_count = 0
 
-    while jazl == 0:
-        if iteration_count >= MAX_ITERATIONS:
-            print("Maximum iterations reached. Terminating to prevent infinite loop.")
-            jazl = 1
-            break
-        
-        if (PC // 4) - 1 >= len(il):  # Check if PC exceeds instruction list
-            print("PC out of bounds. Halting execution.")
-            jazl = 1
-            break
-    
+    while jazl == 0:  
         if flag == 0:
             PC += 4
         else:
