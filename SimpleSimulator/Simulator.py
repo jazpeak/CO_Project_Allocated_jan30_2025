@@ -168,7 +168,6 @@ def decode_instruction(instr):
                 PC += imm
                 if imm == 0:  # Prevent infinite loop if imm is 0
                     jazl = 1
-                    PC=0
         elif funct3 == "001":  # bne
             if registers[rs1] != registers[rs2]:
                 flag = 1
@@ -246,11 +245,12 @@ def run():
             print("PC out of bounds. Halting execution.")
             jazl = 1
             break
-
-        if flag == 0:
-            PC += 4
-        else:
-            flag = 0
+        if (jazl!=1):
+            if flag == 0:
+                PC += 4
+            else:
+                flag = 0
+        
         
         decode_instruction(il[(PC // 4) - 1])
         fileOutput(trace_file_path)
