@@ -263,8 +263,6 @@ def run(il):
         decode_instruction(il[(PC//4)-1])
         #print(PC,flag)
         printoutput()
-        if u==50:
-            break
     memorywrite()
 
 il = setup(ifilename)

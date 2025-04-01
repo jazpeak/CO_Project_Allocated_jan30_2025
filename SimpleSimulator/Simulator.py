@@ -168,6 +168,7 @@ def decode_instruction(instr):
                 PC += imm
                 if imm == 0:  # Prevent infinite loop if imm is 0
                     jazl = 1
+                    PC=0
         elif funct3 == "001":  # bne
             if registers[rs1] != registers[rs2]:
                 flag = 1
