@@ -168,7 +168,6 @@ def decode_instruction(instr):
                 PC += imm
                 if imm == 0:  # Prevent infinite loop if imm is 0
                     jazl = 1
-                    PC-=4
         elif funct3 == "001":  # bne
             if registers[rs1] != registers[rs2]:
                 flag = 1
@@ -236,14 +235,12 @@ def run():
     MAX_ITERATIONS = 1000  # Arbitrary limit to prevent infinite loops
     iteration_count = 0
 
-    while jazl == 0:  
+    while jazl == 0:        
+        decode_instruction(il[(PC // 4)])
         if flag == 0:
             PC += 4
         else:
             flag = 0
-        
-        
-        decode_instruction(il[(PC // 4) - 1])
         fileOutput(trace_file_path)
         iteration_count += 1
     
