@@ -86,18 +86,12 @@ class AsmGrader(Grader):
 			if self.operating_system == 'linux':
 				assembly_file = ' ' + '../automatedTesting/tests/assembly/' + genDir + '/' + test
 				machine_code_file = ' ' + '../automatedTesting/tests/assembly/user_' + expDir + '/' + test
-				machine_code_readable_file = ' ' + '../automatedTesting/tests/assembly/user_' + expDir + '/' + test.split(".")[0]+"_r.txt"
-				os.remove(machine_code_file) if os.path.exists(machine_code_file) else None; 
-				os.remove(machine_code_readable_file) if os.path.exists(machine_code_readable_file) else None;
-				#os.system('touch' + ' ' + machine_code_file)
+				os.system('touch' + ' ' + machine_code_file)
 			elif self.operating_system == 'windows':
 				assembly_file = ' ' + '..\\automatedTesting\\tests\\assembly\\' + genDir + '\\' + test
 				machine_code_file = ' ' + '..\\automatedTesting\\tests\\assembly\\user_' + expDir + '\\' + test
-				machine_code_readable_file = ' ' + '..\\automatedTesting\\tests\\assembly\\user_' + expDir + '\\' + test.split(".")[0]+"_r.txt"
-				os.remove(machine_code_file) if os.path.exists(machine_code_file) else None; 
-				os.remove(machine_code_readable_file) if os.path.exists(machine_code_readable_file) else None;
-				#os.system('cd . >' + machine_code_file)
-			command = python_command + assembly_file + machine_code_file + machine_code_readable_file
+				os.system('cd . >' + machine_code_file)
+			command = python_command + assembly_file + machine_code_file
 			os.system(command)
 			generatedBin = open(machine_code_file.strip(),'r').readlines()
 
@@ -105,11 +99,7 @@ class AsmGrader(Grader):
 				exact_machine_code_file = "../automatedTesting/tests/assembly/" + expDir + "/" + test
 			elif self.operating_system == 'windows':
 				exact_machine_code_file = "..\\automatedTesting\\tests\\assembly\\" + expDir + "\\" + test
-			try:
-				expectedBin = open(exact_machine_code_file,'r').readlines()
-			except FileNotFoundError:
-				self.printSev(self.HIGH, bcolors.WARNING + "[Golden Binary Opcode File Not Found]\n" + exact_machine_code_file)
-				expectedBin = " "
+			expectedBin = open(exact_machine_code_file,'r').readlines()
 			
 
 			if self.diff(generatedBin, expectedBin):

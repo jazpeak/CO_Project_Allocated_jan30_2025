@@ -235,14 +235,12 @@ def run():
     MAX_ITERATIONS = 1000  # Arbitrary limit to prevent infinite loops
     iteration_count = 0
 
-    while jazl == 0:  
+    while jazl == 0:        
+        decode_instruction(il[(PC // 4)])
         if flag == 0:
             PC += 4
         else:
             flag = 0
-        
-        
-        decode_instruction(il[(PC // 4) - 1])
         fileOutput(trace_file_path)
         iteration_count += 1
     
