@@ -236,9 +236,9 @@ def run():
     iteration_count = 0
 
     while jazl == 0: 
-        if(iteration_count==MAX_ITERATIONS){
+        if(iteration_count==MAX_ITERATIONS):
             break
-        }       
+        print(PC//4)      
         decode_instruction(il[(PC // 4)])
         if flag == 0:
             PC += 4
