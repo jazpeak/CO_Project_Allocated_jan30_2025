@@ -4,6 +4,7 @@ import os
 registers = [0] * 32    # this is creating a list of 32 integers where all elements are 0 for now
 registers[2] = 380      # this is the stack pointer, so it is set to 380 for now.
 memory = [0] * 32
+stack=[0]*32
 
 def bin_to_dec(binary):  
     decimal = 0
@@ -80,6 +81,7 @@ def decode_instruction(instr):
     global PC
     opcode = instr[-7:]
     if opcode == "0110011": # checks R-type
+        print("srl")
         funct7 = instr[:7]  
         rs2 = int(instr[7:12], 2)  
         rs1 = int(instr[12:17], 2)  
@@ -107,29 +109,73 @@ def decode_instruction(instr):
             else:
                 registers[rd] = 0
         
-        elif funct3 == "001" and funct7 == "0000000":  
-            registers[rd] = registers[rs1] >> (int(x[-5:], 2))
+        elif funct3 == "101" and funct7 == "0000000":  
+            registers[rd] = registers[rs1] >> (registers[rs2] & 0x1F)
 
-    if opcode == '0100011':  # S-type sw
+
+    if opcode == '0100011':  # S-type sw (Store Word)
         rs1 = int(instr[12:17], 2)
         rs2 = int(instr[7:12], 2)
         funct3 = instr[17:20]
         imm = twos_to_dec(instr[:7] + instr[20:25])
-        addr = rs1 + imm
+        base_addr = registers[rs1]  
 
-        if funct3 == '010':
-            memory[addr] = registers[rs2]
+        addr = base_addr + imm  # Compute effective address
 
-    if opcode == "0000011": # I-type lw
-        imm = twos_to_dec(instr[:12])
-        rs1 = int(instr[12:17], 2)
+        print(f"SW: Base Addr: {hex(base_addr)}, Offset: {imm}, Computed Addr: {hex(addr)}")
+
+        if 0x00000100 <= addr <= 0x0000017C:  # Stack Memory Range
+            if addr % 4 == 0:
+                index = (addr - 0x00000100) // 4  # Convert byte address to stack index
+                if funct3 == '010':  # sw
+                    stack[index] = registers[rs2]
+            else:
+                print(f"Error: Misaligned address {hex(addr)} for sw in stack memory")
+
+        elif 0x00010000 <= addr <= 0x0001007C:  # Data Memory Range
+            if addr % 4 == 0:
+                index = (addr - 0x00010000) // 4  # Convert byte address to memory index
+                if funct3 == '010':  # sw
+                    memory[index] = registers[rs2]
+            else:
+                print(f"Error: Misaligned address {hex(addr)} for sw in data memory")
+        
+        else:
+            print(f"Error: Address {hex(addr)} out of range for sw")
+
+
+    if opcode == "0000011":  # I-type LW (Load Word)
+        imm = twos_to_dec(instr[:12])  
+        rs1 = int(instr[12:17], 2)  
         funct3 = instr[17:20]
-        rd = int(instr[20:25], 2)
-        rs1 = 10000 - int(dec_to_hex(rs1)[2:])
-        addr = rs1 + imm
+        rd = int(instr[20:25], 2)  
 
-        if funct3 == '010':
-            registers[rd] = memory[addr]
+        base_addr = registers[rs1]  
+        addr = base_addr + imm  
+
+        print(f"LW: Register rs1 (R{rs1}) Value: {hex(base_addr)}, Immediate: {imm}, Computed Addr: {hex(addr)}")
+
+        if 0x00000100 <= addr <= 0x0000017C:  # Stack Memory Range
+            if addr % 4 == 0:
+                index = (addr - 0x00000100) // 4  
+                if funct3 == '010':  # lw
+                    registers[rd] = stack[index]
+            else:
+                print(f"Error: Misaligned address {hex(addr)} for lw in stack memory")
+
+        elif 0x00010000 <= addr <= 0x0001007C:  # Data Memory Range
+            if addr % 4 == 0:
+                index = (addr - 0x00010000) // 4  
+                if funct3 == '010':  # lw
+                    registers[rd] = memory[index]
+            else:
+                print(f"Error: Misaligned address {hex(addr)} for lw in data memory")
+        
+        else:
+            print(f"Error: Address {hex(addr)} out of range for lw")
+
+
+
         
     if opcode == "0010011": # I-type addi
         imm = twos_to_dec(instr[:12])
@@ -146,18 +192,20 @@ def decode_instruction(instr):
         rs1 = int(instr[12:17], 2)
         funct3 = instr[17:20]
         rd = int(instr[20:25], 2)
-        addr = rs1 + imm
 
         if funct3 == "000":
-            registers[rd] = PC + 4
+            temp=PC
             flag = 1
-            PC = registers[6] + imm
-            if PC % 2 == 1:
-                PC -= 1
+            PC = (registers[rs1] + imm) & ~1 
+            if rd!=0:
+                registers[rd] = temp + 4
+
+
 
     if opcode == "1100011": # B-type
+        print("bne")
         funct3 = instr[17:20]
-        imm = instr[0] + instr[20:24] + instr[1:7] + instr[24] + '0'  # imm[12|10:5|4:1|11]
+        imm = instr[0] +instr[24] + instr[1:7] + instr[20:24] + '0'  # imm[12|10:5|4:1|11]
         imm = twos_to_dec(imm)
         rs2 = int(instr[7:12], 2)
         rs1 = int(instr[12:17], 2)
@@ -175,15 +223,17 @@ def decode_instruction(instr):
         else:
             print("ERROR: Not a B-type function")
 
-    if opcode == "1101111": # J-type
-        imm = instr[0] + instr[12:20] + instr[11] + instr[1:11]
-        imm = twos_to_dec(imm)
+    if opcode == "1101111":  # J-type JAL
+        imm = instr[0] + instr[12:20] + instr[11] + instr[1:11]  # Extract immediate in J-type format
+        imm = twos_to_dec(imm) << 1  # Sign-extend and shift left by 1
         rd = int(instr[20:25], 2)
-        registers[rd] = PC + 4
-        flag = 1
-        PC = PC + imm
-        if PC % 2 == 1:
-            PC -= 1
+
+        registers[rd] = PC + 4  # Store return address (PC + 4) in rd
+        flag = 1  # Indicate that we are changing PC
+        PC = PC + imm  # Jump to new address
+
+        # No need for manual LSB correction because we already shifted left
+
 
     if opcode == "1100000":  # Custom halt instruction
         rd = int(instr[20:25], 2)
@@ -238,7 +288,7 @@ def run():
     while jazl == 0: 
         if(iteration_count==MAX_ITERATIONS):
             break
-        print(PC//4)      
+        print(PC)      
         decode_instruction(il[(PC // 4)])
         if flag == 0:
             PC += 4
