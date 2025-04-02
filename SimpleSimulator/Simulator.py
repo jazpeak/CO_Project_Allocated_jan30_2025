@@ -173,10 +173,7 @@ def decode_instruction(instr):
         
         else:
             print(f"Error: Address {hex(addr)} out of range for lw")
-
-
-
-        
+  
     if opcode == "0010011": # I-type addi
         imm = twos_to_dec(instr[:12])
         rs1 = int(instr[12:17], 2)
@@ -199,6 +196,17 @@ def decode_instruction(instr):
             PC = (registers[rs1] + imm) & ~1 
             if rd!=0:
                 registers[rd] = temp + 4
+    if opcode == "0010011":  
+        imm = twos_to_dec(instr[:12])  
+        rs1 = int(instr[12:17], 2)  
+        funct3 = instr[17:20]
+        rd = int(instr[20:25], 2)  
+
+        if funct3 == "011":  
+            if (registers[rs1] & 0xFFFFFFFF) < (imm & 0xFFFFFFFF): 
+                registers[rd] = 1
+            else:
+                registers[rd] = 0
 
 
 
@@ -220,7 +228,15 @@ def decode_instruction(instr):
             if registers[rs1] != registers[rs2]:
                 flag = 1
                 PC += imm
-        else:
+        elif funct3=="100":
+            if registers[rs1] < registers[rs2]:
+                flag = 1
+                PC += imm  #blt
+        elif funct3=="110":
+            if registers[rs1] & 0xFFFFFFFF < registers[rs2] & 0xFFFFFFFF:  # Force unsigned comparison
+                flag = 1
+                PC += imm #bltu
+        else:   
             print("ERROR: Not a B-type function")
 
     if opcode == "1101111":  # J-type JAL
@@ -236,28 +252,14 @@ def decode_instruction(instr):
 
 
     if opcode == '0010111': #u-auipc
-        imm=twos_to_dec(instr[0:20])
+        imm=int(instr[0:20],2)
         rd=int(instr[20:25],2)
         registers[rd]=PC+(imm << 12)
          
     if opcode == '0110111': #u-lui
-        imm=twos_to_dec(instr[0:20])
+        imm=int(instr[0:20],2)
         rd=int(instr[20:25],2)
         registers[rd]=imm << 12
-
-    if opcode=='0110011': #r-sll
-        if funct3=='001':
-            rd=int(instr[20:25],2)          
-            rs1=int(instr[12:17],2)         
-            rs2=int(instr[7:12],2)
-            registers[rd]=registers[rs1]<<(registers[rs2]%32)
-
-        elif funct3=='100':
-            rd=int(instr[20:25], 2)   
-            rs1=int(instr[12:17], 2)  
-            rs2=int(instr[7:12], 2)   
-            registers[rd]=registers[rs1]^registers[rs2]
-                        
     if opcode == "1100000":  # Custom halt instruction
         rd = int(instr[20:25], 2)
         funct3 = instr[17:20]
