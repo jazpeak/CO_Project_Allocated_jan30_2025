@@ -87,8 +87,8 @@ def decode_instruction(instr):
         y = instr[12:17]
         funct3 = instr[17:20]  # funct3
         rd = int(instr[20:25], 2)  # storage register
-        signedrs1 = twos_to_dec(registers[rs1])
-        signedrs2 = twos_to_dec(registers[rs2])
+        signedrs1 = registers[rs1]
+        signedrs2 = registers[rs2]
         if funct3 == "000":  
             if funct7 == "0000000":  
                 registers[rd] = registers[rs1] + registers[rs2]
@@ -235,7 +235,10 @@ def run():
     MAX_ITERATIONS = 1000  # Arbitrary limit to prevent infinite loops
     iteration_count = 0
 
-    while jazl == 0:        
+    while jazl == 0: 
+        if(iteration_count==MAX_ITERATIONS){
+            break
+        }       
         decode_instruction(il[(PC // 4)])
         if flag == 0:
             PC += 4
