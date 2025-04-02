@@ -273,7 +273,17 @@ def decode_instruction(instr):
             rs1=int(instr[12:17], 2)  
             rs2=int(instr[7:12], 2)   
             registers[rd]=registers[rs1]^registers[rs2]
-            
+
+    if opcode=='1100011' and instr[17:20]=='111':  #b-bgeu
+        rs1=int(instr[12:17],2)  
+        rs2=int(instr[7:12],2)   
+        imm=instr[31]+instr[7]+instr[25:31]+instr[8:12]  
+        imm=twos_to_dec(imm)<<1  
+        if registers[rs1]>=registers[rs2]:
+            PC+=imm
+        else:
+            PC+=4
+
     if opcode == "1100000":  # Custom halt instruction
         rd = int(instr[20:25], 2)
         funct3 = instr[17:20]
