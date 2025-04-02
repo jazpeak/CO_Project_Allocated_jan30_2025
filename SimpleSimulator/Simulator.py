@@ -235,6 +235,15 @@ def decode_instruction(instr):
         # No need for manual LSB correction because we already shifted left
 
 
+    if opcode == '0010111': #u-auipc
+        imm=int(instr[0:20],2)
+        rd=int(instr[20:25],2)
+        registers[rd]=PC+(imm << 12)
+         
+    if opcode == '0110111': #u-lui
+        imm=int(instr[0:20],2)
+        rd=int(instr[20:25],2)
+        registers[rd]=imm << 12
     if opcode == "1100000":  # Custom halt instruction
         rd = int(instr[20:25], 2)
         funct3 = instr[17:20]
