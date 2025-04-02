@@ -252,14 +252,28 @@ def decode_instruction(instr):
 
 
     if opcode == '0010111': #u-auipc
-        imm=int(instr[0:20],2)
+        imm=twos_to_dec(instr[0:20])
         rd=int(instr[20:25],2)
         registers[rd]=PC+(imm << 12)
          
     if opcode == '0110111': #u-lui
-        imm=int(instr[0:20],2)
+        imm=twos_to_dec(instr[0:20],2)
         rd=int(instr[20:25],2)
         registers[rd]=imm << 12
+
+    if opcode=='0110011': #r-sll
+        if funct3=='001':
+            rd=int(instr[20:25],2)          
+            rs1=int(instr[12:17],2)         
+            rs2=int(instr[7:12],2)
+            registers[rd]=registers[rs1]<<(registers[rs2]%32)
+
+        elif funct3=='100':
+            rd=int(instr[20:25], 2)   
+            rs1=int(instr[12:17], 2)  
+            rs2=int(instr[7:12], 2)   
+            registers[rd]=registers[rs1]^registers[rs2]
+            
     if opcode == "1100000":  # Custom halt instruction
         rd = int(instr[20:25], 2)
         funct3 = instr[17:20]
