@@ -10,7 +10,8 @@ opCodes = { "R" : "0110011",
             "jalr": "1100111",
             "sw" : "0100011",
             "B" : "1100011",
-            "jal" : "1101111"}
+            "jal" : "1101111",
+            "bonus" : "1100000",}
 
 registers = {"zero" : "00000",
              "ra" : "00001", 
@@ -51,7 +52,7 @@ funct3_R = {"add":"000",
             "and":"111",
             "or" :"110",
             "srl":"101",
-            "slt":"010"}
+            "slt":"010",}
 
 funct7_R = {"add":"0000000",
             "sub":"0100000",
@@ -70,6 +71,11 @@ funct3_I = {"addi":"000",
 
 funct3_S = {"sw":"010"}
 
+funct3_bonus = {"mul","000",
+                "rst","001",
+                "halt","010",
+                "rvrs","011",}
+
 labels = {}
 instructions = []
 pc = 0
@@ -85,6 +91,8 @@ def checkType(ins):
         return btype(ins)
     elif ins[0] == "jal":
         return jtype(ins)
+    elif ins[0] in funct3_bonus:
+        return bonus(ins)
     else:
         raise SyntaxError("Wrong instruction type at line " + str(pc//4 + 1))
     
@@ -191,6 +199,21 @@ def jtype(ins):
     r = x[0] + x[-10:] + x[-11] + x[1:9] + registers[ins[1]] + opCodes['jal']
     return r
 
+def bonus(ins):
+    if ins[0] == "mul":
+        r= "0000000" + registers[ins[3]] + registers[ins[2]] + funct3_bonus[ins[0]] + registers[ins[1]] + "1100000"
+    
+    elif ins[0] == "rst":
+        r = "0000000" + "00000" + "00000" + funct3_bonus[ins[0]] + "00000" + "1100000"
+    
+    elif ins[0] == "halt":
+        r = "0000000" + "00000" + "00000" + funct3_bonus[ins[0]] + "00000" + "1100000"
+    
+    elif ins[0] == "rvrs":
+        r = "0000000" + "00000" + registers[ins[2]] + funct3_bonus[ins[0]] + registers[ins[1]] + "1100000"
+    
+    return r
+
 def checkLabel(s, label=0):
     global pc
     if label != 0:
@@ -223,8 +246,10 @@ def fileOutput (Output):
     pc=0
     with open(Output, 'w') as file:
         for ins in instructions:
+            print(ins)
             file.write(checkType(ins) + '\n')
             pc+=4
+    
 
 if len(sys.argv) < 3:
     print("Usage: python script.py <input_file_path> <output_file_path>")
