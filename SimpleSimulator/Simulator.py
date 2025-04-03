@@ -81,15 +81,14 @@ def decode_instruction(instr):
     global flag
     global PC
     opcode = instr[-7:]
-    if opcode == "0110011": # checks R-type
-        print("srl")
+    if opcode == "0110011": #R-type
         funct7 = instr[:7]  
         rs2 = int(instr[7:12], 2)  
         rs1 = int(instr[12:17], 2)  
         x = instr[7:12]
         y = instr[12:17]
-        funct3 = instr[17:20]  # funct3
-        rd = int(instr[20:25], 2)  # storage register
+        funct3 = instr[17:20]  
+        rd = int(instr[20:25], 2)  
         signedrs1 = registers[rs1]
         signedrs2 = registers[rs2]
         if funct3 == "000":  
@@ -114,7 +113,7 @@ def decode_instruction(instr):
             registers[rd] = registers[rs1] >> (registers[rs2] & 0x1F)
 
 
-    if opcode == '0100011':  # S-type sw (Store Word)
+    if opcode == '0100011':  #sw
         rs1 = int(instr[12:17], 2)
         rs2 = int(instr[7:12], 2)
         funct3 = instr[17:20]
@@ -123,9 +122,9 @@ def decode_instruction(instr):
 
         addr = base_addr + imm  
 
-        print(f"SW: Base Addr: {hex(base_addr)}, Offset: {imm}, Computed Addr: {hex(addr)}")
+        
 
-        if 0x00000100 <= addr <= 0x0000017C:  # Stack Memory Range
+        if 0x00000100 <= addr <= 0x0000017C:  # Stack Memory
             if addr % 4 == 0:
                 index = (addr - 0x00000100) // 4  
                 if funct3 == '010':  # sw
@@ -133,7 +132,7 @@ def decode_instruction(instr):
             else:
                 print(f"Error: Misaligned address {hex(addr)} for sw in stack memory")
 
-        elif 0x00010000 <= addr <= 0x0001007C:  # Data Memory Range
+        elif 0x00010000 <= addr <= 0x0001007C:  # Data Memory
             if addr % 4 == 0:
                 index = (addr - 0x00010000) // 4  
                 if funct3 == '010':  # sw
@@ -152,7 +151,7 @@ def decode_instruction(instr):
             print(f"Error: Address {hex(addr)} out of range for sw")
 
 
-    if opcode == "0000011":  # I-type LW (Load Word)
+    if opcode == "0000011":  #LW 
         imm = twos_to_dec(instr[:12])  
         rs1 = int(instr[12:17], 2)  
         funct3 = instr[17:20]
@@ -161,12 +160,10 @@ def decode_instruction(instr):
         base_addr = registers[rs1]  
         addr = base_addr + imm  
 
-        print(f"LW: Register rs1 (R{rs1}) Value: {hex(base_addr)}, Immediate: {imm}, Computed Addr: {hex(addr)}")
-
         if 0x00000100 <= addr <= 0x0000017C:  
             if addr % 4 == 0:
                 index = (addr - 0x00000100) // 4  
-                if funct3 == '010':  # lw
+                if funct3 == '010':  
                     registers[rd] = stack[index]
             else:
                 print(f"Error: Misaligned address {hex(addr)} for lw in stack memory")
@@ -174,14 +171,14 @@ def decode_instruction(instr):
         elif 0x00010000 <= addr <= 0x0001007C:  
             if addr % 4 == 0:
                 index = (addr - 0x00010000) // 4  
-                if funct3 == '010':  # lw
+                if funct3 == '010':  
                     registers[rd] = memory[index]
             else:
                 print(f"Error: Misaligned address {hex(addr)} for lw in data memory")
         elif 0x00000000 <= addr <= 0x000000FF:
             if addr % 4 == 0:
                 index = (addr - 0x00010000) // 4  
-                if funct3 == '010':  # lw
+                if funct3 == '010':  
                     registers[rd] = program[index]
             else:
                 print(f"Error: Misaligned address {hex(addr)} for lw in data memory")
@@ -190,7 +187,7 @@ def decode_instruction(instr):
         else:
             print(f"Error: Address {hex(addr)} out of range for lw")
   
-    if opcode == "0010011": # I-type addi
+    if opcode == "0010011": #addi
         imm = twos_to_dec(instr[:12])
         rs1 = int(instr[12:17], 2)
         funct3 = instr[17:20]
@@ -200,7 +197,7 @@ def decode_instruction(instr):
         if funct3 == "000":
             registers[rd] = registers[rs1] + imm
 
-    if opcode == "1100111": # I-type jalr
+    if opcode == "1100111": #jalr
         imm = twos_to_dec(instr[:12])
         rs1 = int(instr[12:17], 2)
         funct3 = instr[17:20]
@@ -228,20 +225,19 @@ def decode_instruction(instr):
 
 
     if opcode == "1100011": # B-type
-        print("bne")
         funct3 = instr[17:20]
         imm = instr[0] +instr[24] + instr[1:7] + instr[20:24] + '0'  
         imm = twos_to_dec(imm)
         rs2 = int(instr[7:12], 2)
         rs1 = int(instr[12:17], 2)
         
-        if funct3 == "000":  # beq
+        if funct3 == "000": 
             if registers[rs1] == registers[rs2]:
                 flag = 1
                 PC += imm
                 if imm == 0:  
                     jazl = 1
-        elif funct3 == "001":  # bne
+        elif funct3 == "001":  
             if registers[rs1] != registers[rs2]:
                 flag = 1
                 PC += imm
@@ -256,7 +252,7 @@ def decode_instruction(instr):
         else:   
             print("ERROR: Not a B-type function")
 
-    if opcode == "1101111":  # J-type JAL
+    if opcode == "1101111":  #JAL
         imm = instr[0] + instr[12:20] + instr[11] + instr[1:11]  
         imm = twos_to_dec(imm) << 1  
         rd = int(instr[20:25], 2)
@@ -299,7 +295,7 @@ def decode_instruction(instr):
         else:
             PC+=4
 
-    if opcode == "1100000":  # Custom halt instruction
+    if opcode == "1100000":  # (bonus)
         rd = int(instr[20:25], 2)
         funct3 = instr[17:20]
         rs2 = int(instr[7:12], 2)
@@ -317,8 +313,8 @@ def decode_instruction(instr):
 
 def fileInput(file_name):
     global totallines
-    with open(file_name, "r") as fil:  # Use with statement for safer file handling
-        fl = [line.strip() for line in fil.readlines()]  # List comprehension for efficiency
+    with open(file_name, "r") as fil:  
+        fl = [line.strip() for line in fil.readlines()]  
         totallines = len(fl)
     return fl
 
@@ -341,18 +337,14 @@ def run():
     global PC
     global jazl
     global flag
-    # Clear the trace file at the start
     with open(trace_file_path, 'w') as fh:
         fh.write('')
-    
-    # Add a loop counter to prevent infinite loops
-    MAX_ITERATIONS = 1000  # Arbitrary limit to prevent infinite loops
+    MAX_ITERATIONS = 1000  
     iteration_count = 0
 
     while jazl == 0: 
         if(iteration_count==MAX_ITERATIONS):
-            break
-        print(PC)      
+            break    
         decode_instruction(il[(PC // 4)])
         if flag == 0:
             PC += 4
@@ -363,17 +355,12 @@ def run():
     
     write_memory_to_trace(trace_file_path)
 
-# Update argument handling to accept three arguments but ignore the third
-if len(sys.argv) != 4:  # Expecting script name + 3 arguments (input, trace, read_trace)
-    print("Usage: python script.py <input_file_path> <trace_file_path> <read_trace_file_path>")
-    print("Note: The read_trace_file_path argument is ignored in this implementation.")
+if len(sys.argv) != 4:  
     sys.exit(1)
 
 input_file_path = sys.argv[1]
-trace_file_path = sys.argv[2]  # This is the trace output file
-# Ignore sys.argv[3] (read_trace_file_path) since we don't need it
+trace_file_path = sys.argv[2] 
 
-# Check if input file exists before proceeding
 if not os.path.isfile(input_file_path):
     print(f"Error: Input file '{input_file_path}' not found.")
     sys.exit(1)
