@@ -1,0 +1,6 @@
+addi s2,zero,5
+addi s1,zero,4
+mul s1,s2,s1    
+rvrs s1,s2                       
+rst      
+halt

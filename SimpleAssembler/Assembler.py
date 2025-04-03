@@ -71,10 +71,13 @@ funct3_I = {"addi":"000",
 
 funct3_S = {"sw":"010"}
 
-funct3_bonus = {"mul","000",
-                "rst","001",
-                "halt","010",
-                "rvrs","011",}
+funct3_bonus = {
+    "mul": "000",
+    "rst": "001",
+    "halt": "010",
+    "rvrs": "011"
+}
+
 
 labels = {}
 instructions = []
@@ -240,13 +243,15 @@ def fileRead (file_name):
             checkLabel(s,label)
 
 def fileOutput (Output):
-    if instructions[-1] != ["beq", "zero", "zero", "0"]:
+    """
+    if instructions[-1] != ["beq", "zero", "zero", "0",] or instructions[-1] != ["halt"]:
         raise SyntaxError("Missing virtual halt instruction at the end")
+        """
     global pc
     pc=0
     with open(Output, 'w') as file:
         for ins in instructions:
-            print(ins)
+            #print(ins)
             file.write(checkType(ins) + '\n')
             pc+=4
     

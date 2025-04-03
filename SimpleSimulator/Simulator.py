@@ -295,21 +295,24 @@ def decode_instruction(instr):
         else:
             PC+=4
 
-    if opcode == "1100000":  # (bonus)
+    if opcode == "1100000":  #bonus
         rd = int(instr[20:25], 2)
         funct3 = instr[17:20]
         rs2 = int(instr[7:12], 2)
         rs1 = int(instr[12:17], 2)
         if funct3 == "000":
+            #print("hi")
             registers[rd] = registers[rs1] * registers[rs2]
+            #print(registers[rd])
         if funct3 == "001":
             for i in range(32):
                 registers[i] = 0
         if funct3 == "010":
             print("Halting Execution...")
             jazl = 1
+            flag=1
         if funct3 == "011":
-            registers[rd] = int(dec_to_bin(registers[rs1])[-1], 2)
+            registers[rd] = twos_to_dec(dec_to_twos(registers[rs1])[::-1])
 
 def fileInput(file_name):
     global totallines

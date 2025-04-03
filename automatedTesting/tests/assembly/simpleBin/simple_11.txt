@@ -1,6 +1,0 @@
-mul s1, s2, s3    
-rst                
-halt              
-rvrs t1, t2        
-mul a0, a1, a2
-beq zero,zero,0
