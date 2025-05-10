@@ -78,7 +78,6 @@ funct3_bonus = {
     "rvrs": "011"
 }
 
-
 labels = {}
 instructions = []
 pc = 0
@@ -243,15 +242,10 @@ def fileRead (file_name):
             checkLabel(s,label)
 
 def fileOutput (Output):
-    """
-    if instructions[-1] != ["beq", "zero", "zero", "0",] or instructions[-1] != ["halt"]:
-        raise SyntaxError("Missing virtual halt instruction at the end")
-        """
     global pc
     pc=0
     with open(Output, 'w') as file:
         for ins in instructions:
-            #print(ins)
             file.write(checkType(ins) + '\n')
             pc+=4
     
