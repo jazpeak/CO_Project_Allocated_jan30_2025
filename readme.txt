@@ -1,4 +1,4 @@
-1. we have simple and hard tests both at the assembler level and simulator level.
+1. We have simple and hard tests both at the assembler level and simulator level.
 
 2. The tests for assembler and simulator are independent.
 
