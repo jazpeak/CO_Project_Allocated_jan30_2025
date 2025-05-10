@@ -58,6 +58,14 @@ python3 src/main.py --no-asm --linux
 ```bash
 python3 src\main.py --no-asm --windows
 ```
+---
+
+## Contributors
+
+- [Aryan Khare](https://github.com/aryankhare2110)
+- [Jazl Anwar](https://github.com/jazpeak)
+- [Arul Thirulvasagam](https://github.com/sulpboy)
+- [Soumil Jain](https://github.com/Soumil-24639)
 
 
 
