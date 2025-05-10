@@ -67,7 +67,11 @@ python3 src\main.py --no-asm --windows
 - [Arul Thirulvasagam](https://github.com/sulpboy)
 - [Soumil Jain](https://github.com/Soumil-24639)
 
+---
 
+## Last Update
+
+10th May, 2025
 
 
 
