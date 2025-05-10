@@ -2,8 +2,6 @@ import sys
 import re
 from re import split
 
-testCaseFiles = {"SimpleGen": ["Ex_test_0.txt", "Ex_test_1.txt", "Ex_test_2.txt", "Ex_test_3.txt", "Ex_test_4.txt", "Ex_test_5.txt", "Ex_test_6.txt", "Ex_test_7.txt", "Ex_test_8.txt", "Ex_test_9.txt", "Ex_test_10.txt"], "errorGen": ["Ex_test_3.txt"]}
-
 opCodes = { "R" : "0110011",
             "lw" : "0000011",
             "addi": "0010011",
@@ -248,7 +246,6 @@ def fileOutput (Output):
         for ins in instructions:
             file.write(checkType(ins) + '\n')
             pc+=4
-    
 
 if len(sys.argv) < 3:
     print("Usage: python script.py <input_file_path> <output_file_path>")
