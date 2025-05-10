@@ -31,7 +31,8 @@ Location: `tests/bin/` and `tests/traces/`
 
 ### Running the Assembler
 
-__The assembler takes an assembly file as input and produces a machine code file.__
+__The assembler takes an assembly file as input and produces a machine code file.__  
+
 Navigate to the automatedTesting Folder on your Terminal and run the following command:
 
 **Linux:**
