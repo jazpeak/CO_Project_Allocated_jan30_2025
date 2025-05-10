@@ -26,7 +26,7 @@ The assembly file and its corresponding machine code file **must have the same n
 
 ## How to Use
 
-This framework is for Python users on Linux or Windows.
+This framework is for **Python users on Linux or Windows**.
 
 ### Running the Assembler
 
@@ -35,3 +35,9 @@ The assembler takes an assembly file as input and produces a machine code file.
 **Linux:**
 ```bash
 python3 src/main.py --no-sim --linux
+```
+**Windows:**
+```bash
+python3 src\main.py --no-sim --windows
+```
+
