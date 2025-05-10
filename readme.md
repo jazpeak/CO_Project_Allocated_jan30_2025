@@ -27,13 +27,13 @@ Location: `tests/bin/` and `tests/traces/`
 
 ## How to Run
 
-**Prerequisite: Python3 must be installed on your device**
+**Prerequisite:** Python3 must be installed on your device
 
 ### Running the Assembler
 
-__The assembler takes an assembly file as input and produces a machine code file.__  
+The assembler takes an assembly file as input and produces a machine code file.  
 
-Navigate to the automatedTesting Folder on your Terminal and run the following command to run the Assembler:
+Navigate to `/automatedTesting` on your Terminal and run the following command to run the Assembler:
 
 **Linux:**
 ```bash
@@ -46,9 +46,9 @@ python3 src\main.py --no-sim --windows
 
 ### Running the Simulator  
 
-__Simulator takes a machine code file as input and produces a trace file as output.__  
+Simulator takes a machine code file as input and produces a trace file as output. 
 
-Navigate to the automatedTesting Folder on your Terminal and run the following command to run the Simulator:
+Navigate to `/automatedTesting` on your Terminal and run the following command to run the Simulator:
 
 **Linux:**
 ```bash
